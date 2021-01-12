@@ -7,8 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class sqlTareaDAO implements TareaDAO {
 
@@ -23,6 +22,7 @@ public class sqlTareaDAO implements TareaDAO {
     private final String BORRAR = "delete from Tarea where cveProyecto = ?;";
     private final String LISTAR = "select * from Tarea;";
     private final String CAMBIAR = "update Tarea set nombres = ?, apellidoPat = ?, apellidoMat = ?, duracion = ?, predecesor = ?, avance = ? where cveProyecto = ?;";
+    private final String CONSULTANOMBRE = "select * from Tarea where nombreTarea = ?";
 
     public sqlTareaDAO(){
         try{
@@ -80,6 +80,31 @@ public class sqlTareaDAO implements TareaDAO {
         }
 
         return cveProyecto;
+    }
+
+    public Map<String, String> consultarTarea(String nombreTarea) {
+        //  Se crea el Map
+        Map<String, String> mapTarea = new HashMap<>();
+
+        try{
+            //  Se prepara el statement y añaden los datos
+            ps = conector.prepareStatement(CONSULTANOMBRE);
+            ps.setString(1, nombreTarea);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                mapTarea.put("nombreTarea", rs.getString("nombreTarea"));
+                mapTarea.put("fechaEntrega", rs.getString("fechaEntrega"));
+                mapTarea.put("progreso", rs.getString("progreso"));
+            }
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }finally {
+            closeConnections();
+        }
+        return mapTarea;
     }
 
     public int cambiar(Tarea ob) {

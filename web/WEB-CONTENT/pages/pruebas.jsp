@@ -64,10 +64,6 @@
                         var fechaEntrega = json[0]['fechaEntrega'];
                         var progreso = json[0]["progreso"];
                     })
-
-                    xhttp.open("POST", "consultaTiempoReal", true);
-                    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                    xhttp.send("nombresTareas = " + JSON.stringify(Array.from()))
                 }
             });
 
