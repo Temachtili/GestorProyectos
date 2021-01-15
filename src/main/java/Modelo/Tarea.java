@@ -3,34 +3,28 @@ package Modelo;
 public class Tarea {
 
     private int cveProyecto;
-    private String nombres;
-    private String apellidoPat;
-    private String apellidoMat;
-    private int duracion;
+    private String nombreTarea;
+    private String fechaEntrega;
     private int predecesor;
-    private int avance;
+    private int porcentaje;
 
     public Tarea() {
 
     }
 
-    public Tarea(int cveProyecto, String nombres, String apellidoPat, String apellidoMat, int duracion, int predecesor, int avance) {
+    public Tarea(int cveProyecto, String nombreTarea, String fechaEntrega, int predecesor, int porcentaje) {
         this.cveProyecto = cveProyecto;
-        this.nombres = nombres;
-        this.apellidoPat = apellidoPat;
-        this.apellidoMat = apellidoMat;
-        this.duracion = duracion;
+        this.nombreTarea = nombreTarea;
+        this.fechaEntrega = fechaEntrega;
         this.predecesor = predecesor;
-        this.avance = avance;
+        this.porcentaje = porcentaje;
     }
 
-    public Tarea(String nombres, String apellidoPat, String apellidoMat, int duracion, int predecesor, int avance) {
-        this.nombres = nombres;
-        this.apellidoPat = apellidoPat;
-        this.apellidoMat = apellidoMat;
-        this.duracion = duracion;
+    public Tarea(String nombreTarea, String fechaEntrega, int predecesor, int porcentaje) {
+        this.nombreTarea = nombreTarea;
+        this.fechaEntrega = fechaEntrega;
         this.predecesor = predecesor;
-        this.avance = avance;
+        this.porcentaje = porcentaje;
     }
 
     public int getCveProyecto() {
@@ -41,36 +35,20 @@ public class Tarea {
         this.cveProyecto = cveProyecto;
     }
 
-    public String getNombres() {
-        return nombres;
+    public String getNombreTarea() {
+        return nombreTarea;
     }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
+    public void setNombreTarea(String nombreTarea) {
+        this.nombreTarea = nombreTarea;
     }
 
-    public String getApellidoPat() {
-        return apellidoPat;
+    public String getFechaEntrega() {
+        return fechaEntrega;
     }
 
-    public void setApellidoPat(String apellidoPat) {
-        this.apellidoPat = apellidoPat;
-    }
-
-    public String getApellidoMat() {
-        return apellidoMat;
-    }
-
-    public void setApellidoMat(String apellidoMat) {
-        this.apellidoMat = apellidoMat;
-    }
-
-    public int getDuracion() {
-        return duracion;
-    }
-
-    public void setDuracion(int duracion) {
-        this.duracion = duracion;
+    public void setFechaEntrega(String fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
     }
 
     public int getPredecesor() {
@@ -81,11 +59,11 @@ public class Tarea {
         this.predecesor = predecesor;
     }
 
-    public int getAvance() {
-        return avance;
+    public int getPorcentaje() {
+        return porcentaje;
     }
 
-    public void setAvance(int avance) {
-        this.avance = avance;
+    public void setPorcentaje(int porcentaje) {
+        this.porcentaje = porcentaje;
     }
 }

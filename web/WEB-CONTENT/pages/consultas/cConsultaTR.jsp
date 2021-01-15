@@ -1,6 +1,7 @@
 <%@ page import="DAO.Tarea.sqlTareaDAO" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="java.util.*" %><%--
+<%@ page import="java.util.*" %>
+<%@ page import="java.io.PrintWriter" %><%--
   Created by IntelliJ IDEA.
   User: Temachtili
   Date: 1/12/2021
@@ -13,6 +14,8 @@
     sqlTareaDAO sql = new sqlTareaDAO();
     Map<String, String> arr = sql.consultarTarea(nombreTarea);
 
-    System.out.println(new Gson().toJson(arr));
+    PrintWriter outt = response.getWriter();
+    outt.println(new Gson().toJson(arr));
+
 
   %>

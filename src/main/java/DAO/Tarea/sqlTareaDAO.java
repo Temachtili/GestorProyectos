@@ -7,7 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class sqlTareaDAO implements TareaDAO {
 
@@ -18,10 +21,10 @@ public class sqlTareaDAO implements TareaDAO {
     private ResultSet rs;
     private PreparedStatement ps;
     //Query's
-    private final String INSERTAR = "insert into Tarea(nombres, apellidoPat, apellidoMat, duracion, predecesor, avance) values (?, ?, ?, ?, ?, ?);";
+    private final String INSERTAR = "insert into Tarea(nombreTarea, fechaEntrega, predecesor, porcentaje) values (?, ?, ?, ?);";
     private final String BORRAR = "delete from Tarea where cveProyecto = ?;";
     private final String LISTAR = "select * from Tarea;";
-    private final String CAMBIAR = "update Tarea set nombres = ?, apellidoPat = ?, apellidoMat = ?, duracion = ?, predecesor = ?, avance = ? where cveProyecto = ?;";
+    private final String CAMBIAR = "update Tarea set nombreTarea = ?, fechaEntrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
     private final String CONSULTANOMBRE = "select * from Tarea where nombreTarea = ?";
 
     public sqlTareaDAO(){
@@ -96,7 +99,7 @@ public class sqlTareaDAO implements TareaDAO {
             while (rs.next()){
                 mapTarea.put("nombreTarea", rs.getString("nombreTarea"));
                 mapTarea.put("fechaEntrega", rs.getString("fechaEntrega"));
-                mapTarea.put("progreso", rs.getString("progreso"));
+                mapTarea.put("porcentaje", rs.getInt("porcentaje") + "");
             }
 
         }catch (Exception exception){
@@ -129,12 +132,10 @@ public class sqlTareaDAO implements TareaDAO {
 
     private void incorporarDatos(Tarea ob, String query) throws SQLException {
         ps = conector.prepareStatement(query);
-        ps.setString(1, ob.getNombres());
-        ps.setString(2, ob.getApellidoPat());
-        ps.setString(3, ob.getApellidoMat());
-        ps.setInt(4, ob.getDuracion());
+        ps.setString(1, ob.getNombreTarea());
+        ps.setString(4, ob.getFechaEntrega());
         ps.setInt(5, ob.getPredecesor());
-        ps.setInt(6, ob.getAvance());
+        ps.setInt(6, ob.getPorcentaje());
     }
 
     public List<Tarea> listar() {
@@ -147,7 +148,7 @@ public class sqlTareaDAO implements TareaDAO {
             rs = ps.getResultSet();
 
             while (rs.next()){
-                lista.add(new Tarea(rs.getInt("cveProyecto"), rs.getString("nombres"), rs.getString("apellidoPat"), rs.getString("apellidoMat"), rs.getInt("duracion"), rs.getInt("predecesor"), rs.getInt("avance")));
+                lista.add(new Tarea(rs.getInt("cveProyecto"), rs.getString("fechaEntrega"), rs.getString("fechaEntrega"), rs.getInt("predecesor"), rs.getInt("porcentaje")));
             }
         }catch (Exception e){
             System.out.println(e.toString() + " en listar() - sqlTareaDAO");
@@ -168,3 +169,4 @@ public class sqlTareaDAO implements TareaDAO {
         }
     }
 }
+

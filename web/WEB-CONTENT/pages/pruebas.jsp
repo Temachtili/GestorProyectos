@@ -33,7 +33,7 @@
 
         List<String> nombresTareas = new ArrayList<>();
         for (Tarea tarea : arr) {
-            String nombre = StandardCharsets.UTF_8.encode(tarea.getNombreTarea() + " " + tarea.getFechaEntrega() + " " + tarea.getProgreso());
+            String nombre = tarea.getNombreTarea() + " " + tarea.getFechaEntrega() + " " + tarea.getPorcentaje();
             nombresTareas.add(nombre);
         }
 
@@ -54,7 +54,7 @@
                 source: nombresTareas,
                 select: function (event, item){
                     var params = {
-                        cliente: item.item.value
+                        tarea: item.item.value
                     }
 
                     $.get("consultas/cConsultaTR.jsp", params, function (response){
