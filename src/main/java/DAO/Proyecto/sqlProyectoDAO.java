@@ -81,7 +81,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
         return 0;
     }
 
-    public List<Proyecto> listar() {
+    public ArrayList<Proyecto> listar() {
         ArrayList<Proyecto> lista = new ArrayList<Proyecto>();
 
         try{

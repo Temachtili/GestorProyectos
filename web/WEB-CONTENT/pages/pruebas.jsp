@@ -24,20 +24,22 @@
     <%@ page import="DAO.Tarea.TareaDAO" %>
     <%@ page import="java.util.ArrayList" %>
     <%@ page import="Modelo.Tarea" %>
-    <%@ page import="java.util.List" %>
-    <%@ page import="com.google.gson.Gson" %>
-    <%@ page import="java.nio.charset.StandardCharsets" %>
     <%
         TareaDAO sql = new sqlTareaDAO();
-        ArrayList<Tarea> arr = (ArrayList<Tarea>) sql.listar();
+        //ArrayList<Tarea> arr =  sql.listar();
 
-        List<String> nombresTareas = new ArrayList<>();
-        for (Tarea tarea : arr) {
+        ArrayList<String> nombresTareas = new ArrayList<>();
+
+        /*for (Tarea tarea : arr) {
             String nombre = tarea.getNombreTarea() + " " + tarea.getFechaEntrega() + " " + tarea.getPorcentaje();
             nombresTareas.add(nombre);
-        }
+        }*/
 
-        String x = new Gson().toJson(nombresTareas); // anyObject = List<Bean>, Map<K, Bean>, Bean, String, etc..
+        nombresTareas.add("Primer Proyecto 22/02/2021 70");
+        nombresTareas.add("Segundo Proyecto 25/03/2021 45");
+        nombresTareas.add("Tercer Proyecto 01/04/2021 10");
+
+        System.out.println(nombresTareas);
 
     %>
 
@@ -46,9 +48,6 @@
         $( function () {
 
             var nombresTareas = null;
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function (){ nombresTareas = JSON.parse(this.responseText); };
 
             $('#Buscar').autocomplete({
                 source: nombresTareas,
@@ -60,9 +59,9 @@
                     $.get("consultas/cConsultaTR.jsp", params, function (response){
                         var json = JSON.parse(response);
 
-                        var nombreTarea = json[0]['nombreTarea'];
-                        var fechaEntrega = json[0]['fechaEntrega'];
-                        var progreso = json[0]["progreso"];
+                        document.getElementById().value = json[0]['nombreTarea'];
+                        document.getElementById().value =  json[0]['fechaEntrega'];
+                        document.getElementById().value =  json[0]["progreso"];
                     })
                 }
             });
@@ -76,9 +75,12 @@
 
 <body>
 
-    <div class="progress">
-        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-    </div>
+    <input type="text" id="Buscar" placeholder="busca una tarea">
+    <input type="text" for="" id="nombreTarea">
+    <input type="text" for="" id="fechaEntrega">
+    <input type="text" for="" id="progreso">
+    <button id="btn">Presiona</button>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>

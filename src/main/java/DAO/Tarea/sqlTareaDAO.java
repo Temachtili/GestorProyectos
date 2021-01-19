@@ -21,11 +21,11 @@ public class sqlTareaDAO implements TareaDAO {
     private ResultSet rs;
     private PreparedStatement ps;
     //Query's
-    private final String INSERTAR = "insert into Tarea(nombreTarea, fechaEntrega, predecesor, porcentaje) values (?, ?, ?, ?);";
-    private final String BORRAR = "delete from Tarea where cveProyecto = ?;";
-    private final String LISTAR = "select * from Tarea;";
-    private final String CAMBIAR = "update Tarea set nombreTarea = ?, fechaEntrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
-    private final String CONSULTANOMBRE = "select * from Tarea where nombreTarea = ?";
+    private final String INSERTAR = "insert into tarea_table(nombretarea, fechaentrega, predecesor, porcentaje) values(?, ?, ?, ?);";
+    private final String BORRAR = "delete from tarea_table where cveproyecto = ?;";
+    private final String LISTAR = "select * from tarea_table;";
+    private final String CAMBIAR = "update tarea_table set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
+    private final String CONSULTANOMBRE = "select * from tarea_table where nombretarea = ?";
 
     public sqlTareaDAO(){
         try{
@@ -133,12 +133,12 @@ public class sqlTareaDAO implements TareaDAO {
     private void incorporarDatos(Tarea ob, String query) throws SQLException {
         ps = conector.prepareStatement(query);
         ps.setString(1, ob.getNombreTarea());
-        ps.setString(4, ob.getFechaEntrega());
-        ps.setInt(5, ob.getPredecesor());
-        ps.setInt(6, ob.getPorcentaje());
+        ps.setString(2, ob.getFechaEntrega());
+        ps.setInt(3, ob.getPredecesor());
+        ps.setInt(4, ob.getPorcentaje());
     }
 
-    public List<Tarea> listar() {
+    public ArrayList<Tarea> listar() {
         ArrayList<Tarea> lista = new ArrayList<>();
 
         try{
@@ -148,7 +148,7 @@ public class sqlTareaDAO implements TareaDAO {
             rs = ps.getResultSet();
 
             while (rs.next()){
-                lista.add(new Tarea(rs.getInt("cveProyecto"), rs.getString("fechaEntrega"), rs.getString("fechaEntrega"), rs.getInt("predecesor"), rs.getInt("porcentaje")));
+                lista.add(new Tarea(rs.getInt("cveProyecto"), rs.getString("nombretarea"), rs.getString("fechaentrega"), rs.getInt("predecesor"), rs.getInt("porcentaje")));
             }
         }catch (Exception e){
             System.out.println(e.toString() + " en listar() - sqlTareaDAO");

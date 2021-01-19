@@ -16,6 +16,7 @@ public class Conexion {
         try{
             String user = "postgres";
             String password = "root";
+            Class.forName("org.postgresql.Driver");
             this._link = DriverManager.getConnection(url, user, password);
         }catch (Exception e){
             System.out.println(e.toString() + " en connectDB");

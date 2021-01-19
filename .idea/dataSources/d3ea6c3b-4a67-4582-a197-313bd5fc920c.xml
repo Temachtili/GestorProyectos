@@ -684,7 +684,7 @@ true Pacific/Easter
 false Pacific/Efate
 false Pacific/Enderbury
 false Pacific/Fakaofo
-false Pacific/Fiji
+true Pacific/Fiji
 false Pacific/Funafuti
 false Pacific/Galapagos
 false Pacific/Gambier
@@ -784,14 +784,14 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <StartupTime>1607091256</StartupTime>
+      <StartupTime>1610635478</StartupTime>
     </root>
     <database id="2" parent="1" name="dbWeb1">
       <ObjectId>16394</ObjectId>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>604</IntrospectionStateNumber>
+      <IntrospectionStateNumber>630</IntrospectionStateNumber>
       <Current>1</Current>
-      <Relations>sequence|table|16493|16495|1
+      <Relations>sequence|table|16515|16517|1
 </Relations>
     </database>
     <database id="3" parent="1" name="postgres">
@@ -867,7 +867,7 @@ UC/10
 </Acl>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>605</IntrospectionStateNumber>
+      <IntrospectionStateNumber>631</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <schema id="18" parent="2" name="users">
@@ -972,65 +972,65 @@ UC/10
       <HandlerId>335</HandlerId>
       <Type>index</Type>
     </access-method>
-    <sequence id="31" parent="17" name="tarea_cveproyecto_seq">
-      <ObjectId>16493</ObjectId>
+    <sequence id="31" parent="17" name="tarea_table_cveproyecto_seq">
+      <ObjectId>16515</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>601</StateNumber>
+      <StateNumber>627</StateNumber>
       <DataType>integer|0s</DataType>
     </sequence>
-    <table id="32" parent="17" name="tarea">
-      <ObjectId>16495</ObjectId>
+    <table id="32" parent="17" name="tarea_table">
+      <ObjectId>16517</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>601</StateNumber>
+      <StateNumber>627</StateNumber>
     </table>
-    <table id="33" parent="17" name="users">
-      <ObjectId>16396</ObjectId>
-      <Owner>postgres</Owner>
-      <StateNumber>491</StateNumber>
-    </table>
-    <column id="34" parent="32" name="cveproyecto">
+    <column id="33" parent="32" name="cveproyecto">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>601</StateNumber>
-      <DefaultExpression>nextval(&apos;tarea_cveproyecto_seq&apos;::regclass)</DefaultExpression>
+      <StateNumber>627</StateNumber>
+      <DefaultExpression>nextval(&apos;tarea_table_cveproyecto_seq&apos;::regclass)</DefaultExpression>
       <TypeId>23</TypeId>
     </column>
-    <column id="35" parent="32" name="nombres">
+    <column id="34" parent="32" name="nombretarea">
       <Position>2</Position>
       <DataType>varchar(100)|0s</DataType>
-      <StateNumber>601</StateNumber>
+      <StateNumber>627</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="36" parent="32" name="apellidopat">
+    <column id="35" parent="32" name="fechaentrega">
       <Position>3</Position>
-      <DataType>varchar(100)|0s</DataType>
-      <StateNumber>601</StateNumber>
+      <DataType>varchar(30)|0s</DataType>
+      <StateNumber>627</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="37" parent="32" name="apellidomat">
+    <column id="36" parent="32" name="predecesor">
       <Position>4</Position>
-      <DataType>varchar(100)|0s</DataType>
-      <StateNumber>601</StateNumber>
-      <TypeId>1043</TypeId>
+      <DataType>integer|0s</DataType>
+      <StateNumber>627</StateNumber>
+      <TypeId>23</TypeId>
     </column>
-    <column id="38" parent="32" name="duracion">
+    <column id="37" parent="32" name="porcentaje">
       <Position>5</Position>
       <DataType>integer|0s</DataType>
-      <StateNumber>601</StateNumber>
+      <StateNumber>627</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="39" parent="32" name="predecesor">
-      <Position>6</Position>
-      <DataType>integer|0s</DataType>
-      <StateNumber>601</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="40" parent="32" name="avance">
-      <Position>7</Position>
-      <DataType>integer|0s</DataType>
-      <StateNumber>601</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
+    <index id="38" parent="32" name="tarea_table_pkey">
+      <ObjectId>16521</ObjectId>
+      <StateNumber>627</StateNumber>
+      <ColNames>cveproyecto</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+    </index>
+    <key id="39" parent="32" name="tarea_table_pkey">
+      <ObjectId>16522</ObjectId>
+      <StateNumber>627</StateNumber>
+      <ColNames>cveproyecto</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>tarea_table_pkey</UnderlyingIndexName>
+    </key>
   </database-model>
 </dataSource>

@@ -1,20 +1,26 @@
 package Pruebas;
 
+import DAO.Tarea.TareaDAO;
 import DAO.Tarea.sqlTareaDAO;
 import Modelo.Tarea;
 
+import java.util.ArrayList;
+
 public class index {
     public static void main(String[] args){
-        Tarea tarea = new Tarea("Daniela Nicolle", "Mendez", "Reyez", 6, 2, 3);
+        Tarea tarea2 = new Tarea("Nuevo proyecto", "20/02/2021", 3, 45);
         DAO.Tarea.sqlTareaDAO insertTarea = new DAO.Tarea.sqlTareaDAO();
-        insertTarea.insertar(tarea);
+        insertTarea.insertar(tarea2);
 
-        DAO.Tarea.sqlTareaDAO listador = new sqlTareaDAO();
+        TareaDAO sql = new sqlTareaDAO();
+        ArrayList<Tarea> arr =  sql.listar();
 
-        if (listador.listar() != null){
-            System.out.println("Hay registros de tareas en la base de datos");
-        }else{
-            System.out.println("No hay registros de tareas en la base de datos");
+        ArrayList<String> nombresTareas = new ArrayList<>();
+        for (Tarea tarea : arr) {
+            String nombre = tarea.getNombreTarea() + " " + tarea.getFechaEntrega() + " " + tarea.getPorcentaje();
+            nombresTareas.add(nombre);
         }
+
+        System.out.println(nombresTareas);
     }
 }

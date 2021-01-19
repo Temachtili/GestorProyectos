@@ -12,21 +12,27 @@
 
     <!-- Hojas de Estilo -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <%@ page import="DAO.Tarea.sqlTareaDAO" %>
+    <%@ page import="DAO.Tarea.TareaDAO" %>
+    <%@ page import="java.util.ArrayList" %>
+    <%@ page import="Modelo.Tarea" %>
+    <%
+        TareaDAO sql = new sqlTareaDAO();
+        ArrayList<Tarea> arr =  sql.listar();
+
+        ArrayList<String> nombresTareas = new ArrayList<>();
+
+        for (Tarea tarea : arr) {
+            String nombre = tarea.getNombreTarea() + " " + tarea.getFechaEntrega() + " " + tarea.getPorcentaje();
+            nombresTareas.add(nombre);
+        }
+
+        System.out.println(nombresTareas);
+
+    %>
+
 </head>
 <body>
-    <header>
-        <div class="nav-home">
-
-        </div>
-    </header>
-
-    <div class="content-project">
-        <div class="panel-Proyectos">
-
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-
 </body>
 </html>
