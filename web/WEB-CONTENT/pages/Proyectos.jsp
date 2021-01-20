@@ -1,9 +1,7 @@
-<%@ page import="DAO.Tarea.TareaDAO" %>
 <%@ page import="DAO.Proyecto.ProyectoDAO" %>
 <%@ page import="DAO.Proyecto.sqlProyectoDAO" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Modelo.Proyecto" %>
-<%@ page import="Modelo.Tarea" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
@@ -21,6 +19,7 @@
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
     <script src="../js/jquery-3.5.1.js"></script>
     <script src="../js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <title>Gantt</title>
 
@@ -35,9 +34,18 @@
         System.out.println(nombres);
 
         if(request.getParameter("NombreProyecto") != null){
-            Proyecto nuevoProyecto = new Proyecto(request.getParameter("NombreProyecto"));
             ProyectoDAO sql = new sqlProyectoDAO();
-            sql.insertar(nuevoProyecto);
+            sql.insertar(new Proyecto(request.getParameter("NombreProyecto")));
+        }
+
+        if(request.getParameter("Borrar") != null){
+            ProyectoDAO sql = new sqlProyectoDAO();
+            sql.eliminar(new Proyecto(request.getParameter("Borrar")));
+        }
+
+        if(request.getParameter("Actualizar") != null){
+            ProyectoDAO sql = new sqlProyectoDAO();
+            //sql.cambiar(new Proyecto(request.getParameter("Actualizar")));
         }
 
     %>
@@ -57,14 +65,16 @@
 
                 const contenedor = document.getElementById("lista-proyectos");
                 let listaProyectos = `
-                    <li id="`+ i +`" class="list-group-item lista" onclick="llamarTareas("`+i+`")">
+                    <li id="`+ i +`" class="list-group-item lista">
                         <div class="row">
-                            <div class="col-10">`+i+`</div>
-                            <div class="col-1">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Nuevo_Proyecto">Editar</button>
+                            <div class="col-10">
+                                <p name="`+ i +`">`+ i +`</p>
                             </div>
                             <div class="col-1">
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Confirmar_Borrar">Borrar</button>
+                                <button type="button" class="btn btn-primary" editar name="`+ i +`">Editar</button>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" borrar name="`+ i +`">Borrar</button>
                             </div>
                         </div>
                     </li>`;
@@ -101,7 +111,7 @@
             <h1 class="display-4">Mis proyectos</h1>
         </div>
         <div class="col-2 d-flex align-items-center">
-            <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#Nuevo_Proyecto">Nuevo Proyecto</button>
+            <button type="button" class="btn btn-success"  id="btn_nuevo">Nuevo Proyecto</button>
         </div>
     </div>
 
@@ -111,58 +121,9 @@
     </div>
     <div class="card">
         <ul id="lista-proyectos" class="list-group list-group-flush">
-
         </ul>
     </div>
-
     <br>
-
-    <!-- Modal -->
-    <div class="modal fade" id="Nuevo_Proyecto" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="Titulo_Modal">Crear Nueva Proyecto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="mb-3">
-                        <label class="form-label">Nombre del proyecto</label>
-                        <input type="text" class="form-control" id="Nombre_Proyecto" placeholder="Nombre">
-                    </div>
-
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="Guardar">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="Confirmar_Borrar" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Borrar proyecto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <div class="d-flex align-items-center flex-column">
-                            <p class="fs-4 text-center">¿Seguro que desea borrar de forma permanente este proyecto?</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-danger" id="Borrar">Borrar</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 
@@ -171,31 +132,96 @@
         crossorigin="anonymous"></script>
 
 <script>
+    var seleccion;
     $(document).ready(function() {
-        $("#Guardar").click(function () {
-            var parametro = {"NombreProyecto" : $('#Nombre_Proyecto').val()};
-            $.ajax({
-                data:  parametro,
-                url:   'Proyectos.jsp',
-                type:  'post',
-                success:  function () {
-                    $('#lista-proyectos').append(
-                        '<li class="list-group-item">'+
-                            '<div class="row">' +
-                                '<div class="col-10">' +
-                                    $('#Nombre_Proyecto').val()+
+
+        $('#btn_nuevo').click(function () {
+            Swal.fire({
+                title: "Crear nuevo proyecto",
+                input: 'text',
+                inputPlaceholder: 'Nombre del proyecto',
+                showCancelButton: true
+            }).then((result) => {
+                if (result.value) {
+                    var parametro = {"NombreProyecto" : result.value};
+                    $.ajax({
+                        data:  parametro,
+                        url:   'Proyectos.jsp',
+                        type:  'post',
+                        success:  function () {
+                            $('#lista-proyectos').append(
+                            '<li class="list-group-item" id="'+$('#Nombre_Proyecto').val()+'">'+
+                                '<div class="row">' +
+                                    '<div class="col-10">' +
+                                        '<p name="'+result.value+'">'+result.value +'</p>' +
+                                    '</div>' +
+                                    '<div class="col-1">' +
+                                        '<button type="button" class="btn btn-primary" editar name="'+result.value+'">Editar</button>' +
+                                    '</div>' +
+                                    '<div class="col-1">' +
+                                    '   <button type="button" class="btn btn-danger" borrar name="'+result.value+'">Borrar</button>' +
+                                    '</div>' +
                                 '</div>' +
-                                '<div class="col-1">' +
-                                    '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Nuevo_Proyecto">Editar</button>' +
-                                '</div>' +
-                                '<div class="col-1">' +
-                                '   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Confirmar_Borrar">Borrar</button>' +
-                                '</div>' +
-                            '</div>' +
-                        '</li>');
+                            '</li>');
+                            location.reload();
+                        }
+                    });
                 }
             });
+        });
 
+        $('[borrar]').click(function () {
+            var name = $(this).attr('name');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    );
+
+                    var parametro = {"Borrar" : name};
+                    $.ajax({
+                        data:  parametro,
+                        url:   'Proyectos.jsp',
+                        type:  'post',
+                        success:  function () {
+                            $('#' + name).remove();
+                        }
+                    });
+                }
+            });
+        });
+        // Editar
+        $('[editar]').click(function () {
+            var name = $(this).attr('name');
+            Swal.fire({
+                title: "Editar nombre",
+                input: 'text',
+                inputValue: name,
+                inputPlaceholder: 'Nombre del proyecto',
+                showCancelButton: true
+            }).then((result) => {
+                if (result.value) {
+                    var parametro = {"Actualizar" : result.value};
+                    $.ajax({
+                        data:  parametro,
+                        url:   'Proyectos.jsp',
+                        type:  'post',
+                        success:  function () {
+                            $("p[name='"+name+"']").text(result.value);
+                        }
+                    });
+                }
+            });
         });
     });
 </script>

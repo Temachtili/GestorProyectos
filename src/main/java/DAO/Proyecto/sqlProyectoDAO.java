@@ -17,7 +17,8 @@ public class sqlProyectoDAO implements ProyectoDAO {
     private PreparedStatement ps;
     //Query's
     private final String INSERTAR = "insert into Proyecto(nombre_proyecto) values (?);";
-    private final String BORRAR = "delete from Proyecto where cveProyecto = ?;";
+    //private final String BORRAR = "delete from Proyecto where cveProyecto = ?;";
+    private final String BORRAR = "delete from Proyecto where nombre_proyecto = ?;";
     private final String LISTAR = "select * from Proyecto;";
 
     public sqlProyectoDAO(){
@@ -63,7 +64,8 @@ public class sqlProyectoDAO implements ProyectoDAO {
             try {
                 //Se prepara el statement
                 ps = conector.prepareStatement(BORRAR);
-                ps.setInt(1, ob.getCveProyecto());
+                //ps.setInt(1, ob.getCveProyecto());
+                ps.setString(1, ob.getNombreProyecto());
 
                 ps.executeUpdate(); //Se ejecuta el Query
                 System.out.println("Se eliminó el(los) registro(s)");
