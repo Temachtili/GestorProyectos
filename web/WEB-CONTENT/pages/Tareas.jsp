@@ -10,7 +10,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="normalize.css">
+    <link rel="stylesheet" type="text/css" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
     <title>Gantt</title>
@@ -40,7 +40,7 @@
             <h1 class="display-4">Nombre del proyecto</h1>
         </div>
         <div class="col-2 d-flex align-items-center">
-            <button type="button" class="btn btn-success me-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-success me-3" data-bs-toggle="modal" data-bs-target="#Form_tarea">
                 Nueva tarea
             </button>
         </div>
@@ -76,10 +76,10 @@
                 <input type="date" class="form-control" id="Fecha" disabled>
             </div>
             <div class="mb-3 d-flex justify-content-center">
-                <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#Form_tarea">
                     Editar
                 </button>
-                <button type="button" class="btn btn-danger">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Confirmar_Borrar">
                     Eliminar
                 </button>
             </div>
@@ -320,11 +320,11 @@
     <br>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="Form_tarea" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Crear Nueva Tarea</h5>
+                    <h5 class="modal-title" id="ModalTitulo">Crear Nueva Tarea</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -350,15 +350,36 @@
                     </div>
 
                 </div>
-                <div class="modal-footer">
-                    <div class="mx-auto">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="Guardar">Guardar</button>
-                    </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="Guardar">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="Confirmar_Borrar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Borrar proyecto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center flex-column">
+                            <p class="fs-4 text-center">¿Seguro que desea borrar de forma permanente este proyecto?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-danger" id="Borrar">Borrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="bg-light d-flex flex-column align-items-center p-1">
