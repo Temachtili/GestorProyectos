@@ -3,6 +3,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Modelo.Proyecto" %>
 <%@ page import="com.google.gson.Gson" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.TreeMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="es">
@@ -25,13 +27,13 @@
 
     <%
         ProyectoDAO p = new sqlProyectoDAO();
-        ArrayList<Proyecto> lista = p.listar(1);
 
-        ArrayList<String> nombres = new ArrayList<>();
+        Map<Integer, String> listado = new TreeMap<>();
 
-        for (Proyecto pro : lista){ nombres.add(pro.getNombreProyecto()); }
+        for (Proyecto pro : p.listar(1)){ listado.put(pro.getCveProyecto(), pro.getNombreProyecto()); }
 
-        System.out.println(nombres);
+        System.out.println("lista: " + listado);
+        System.out.println("extensión: " + listado.size());
 
         if(request.getParameter("NombreProyecto") != null){
             ProyectoDAO sql = new sqlProyectoDAO();
@@ -57,18 +59,19 @@
     </style>
     
     <script>
-        let lista = <%=new Gson().toJson(nombres)%>;
+        let lista = <%=new Gson().toJson(listado)%>;
+        const ext = <%= listado.size() %>;
 
         $( function (){
-            for (let i of lista){
-                console.log("dato " + i);
+            for (var i = 0; i < ext; i++){
+                console.log("dato " + lista[i+1]);
 
                 const contenedor = document.getElementById("lista-proyectos");
                 let listaProyectos = `
-                    <li id="`+ i +`" class="list-group-item lista">
+                    <li id="`+ lista[i+1] +`" class="list-group-item lista">
                         <div class="row">
                             <div class="col-10">
-                                <p name="`+ i +`">`+ i +`</p>
+                                <p name="`+ lista[i+1] +`">`+ lista[i+1] +`</p>
                             </div>
                             <div class="col-1">
                                 <button type="button" class="btn btn-primary" editar name="`+ i +`">Editar</button>
