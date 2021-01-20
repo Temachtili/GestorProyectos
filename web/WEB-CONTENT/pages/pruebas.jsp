@@ -14,32 +14,26 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="../js/jquery-3.5.1.js" type="javascript"></script>
 
     <%@ page import="DAO.Tarea.sqlTareaDAO" %>
     <%@ page import="DAO.Tarea.TareaDAO" %>
     <%@ page import="java.util.ArrayList" %>
     <%@ page import="Modelo.Tarea" %>
+    <%@ page import="com.google.gson.Gson" %>
     <%
         TareaDAO sql = new sqlTareaDAO();
-        //ArrayList<Tarea> arr =  sql.listar();
+        ArrayList<Tarea> arr =  sql.listar();
 
         ArrayList<String> nombresTareas = new ArrayList<>();
 
-        /*for (Tarea tarea : arr) {
+        for (Tarea tarea : arr) {
             String nombre = tarea.getNombreTarea() + " " + tarea.getFechaEntrega() + " " + tarea.getPorcentaje();
             nombresTareas.add(nombre);
-        }*/
-
-        nombresTareas.add("Primer Proyecto 22/02/2021 70");
-        nombresTareas.add("Segundo Proyecto 25/03/2021 45");
-        nombresTareas.add("Tercer Proyecto 01/04/2021 10");
+        }
 
         System.out.println(nombresTareas);
+
 
     %>
 
@@ -47,10 +41,12 @@
 
         $( function () {
 
-            var nombresTareas = null;
+            var nombres = <%= new Gson().toJson(nombresTareas) %>;
+            console.log(nombres);
+            console.log('nombres');
 
             $('#Buscar').autocomplete({
-                source: nombresTareas,
+                source: nombres,
                 select: function (event, item){
                     var params = {
                         tarea: item.item.value
@@ -59,9 +55,9 @@
                     $.get("consultas/cConsultaTR.jsp", params, function (response){
                         var json = JSON.parse(response);
 
-                        document.getElementById().value = json[0]['nombreTarea'];
-                        document.getElementById().value =  json[0]['fechaEntrega'];
-                        document.getElementById().value =  json[0]["progreso"];
+                        document.getElementById("nombreTarea").value = json[0]['nombreTarea'];
+                        document.getElementById("fechaEntrega").value =  json[0]['fechaEntrega'];
+                        document.getElementById("progreso").value =  json[0]["progreso"];
                     })
                 }
             });
