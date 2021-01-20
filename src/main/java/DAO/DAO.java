@@ -7,7 +7,7 @@ public interface DAO <Objeto>{
     int insertar(Objeto ob);
     int eliminar(Objeto ob);
     int cambiar(Objeto ob);
-    ArrayList<Objeto> listar();
+    ArrayList<Objeto> listar(int id);
     void closeConnections();
 
 }

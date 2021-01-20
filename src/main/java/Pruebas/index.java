@@ -13,7 +13,7 @@ public class index {
         insertTarea.insertar(tarea2);
 
         TareaDAO sql = new sqlTareaDAO();
-        ArrayList<Tarea> arr =  sql.listar();
+        ArrayList<Tarea> arr =  sql.listar(1);
 
         ArrayList<String> nombresTareas = new ArrayList<>();
         for (Tarea tarea : arr) {

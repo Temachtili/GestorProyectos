@@ -21,11 +21,11 @@ public class sqlTareaDAO implements TareaDAO {
     private ResultSet rs;
     private PreparedStatement ps;
     //Query's
-    private final String INSERTAR = "insert into tarea_table(nombretarea, fechaentrega, predecesor, porcentaje) values(?, ?, ?, ?);";
-    private final String BORRAR = "delete from tarea_table where cveproyecto = ?;";
-    private final String LISTAR = "select * from tarea_table;";
-    private final String CAMBIAR = "update tarea_table set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
-    private final String CONSULTANOMBRE = "select * from tarea_table where nombretarea = ?";
+    private final String INSERTAR = "insert into Tarea(nombretarea, fechaentrega, predecesor, porcentaje) values(?, ?, ?, ?);";
+    private final String BORRAR = "delete from Tarea where cveproyecto = ?;";
+    private final String LISTAR = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
+    private final String CAMBIAR = "update Tarea set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
+    private final String CONSULTANOMBRE = "select * from Tarea where nombretarea = ?";
 
     public sqlTareaDAO(){
         try{
@@ -138,12 +138,12 @@ public class sqlTareaDAO implements TareaDAO {
         ps.setInt(4, ob.getPorcentaje());
     }
 
-    public ArrayList<Tarea> listar() {
+    public ArrayList<Tarea> listar(int id) {
         ArrayList<Tarea> lista = new ArrayList<>();
 
         try{
             ps = conector.prepareStatement(LISTAR);
-
+            ps.setInt(1, id);
             ps.execute();
             rs = ps.getResultSet();
 

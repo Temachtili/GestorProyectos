@@ -684,7 +684,7 @@ true Pacific/Easter
 false Pacific/Efate
 false Pacific/Enderbury
 false Pacific/Fakaofo
-true Pacific/Fiji
+false Pacific/Fiji
 false Pacific/Funafuti
 false Pacific/Galapagos
 false Pacific/Gambier
@@ -784,14 +784,14 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <StartupTime>1610635478</StartupTime>
+      <StartupTime>1610938822</StartupTime>
     </root>
     <database id="2" parent="1" name="dbWeb1">
       <ObjectId>16394</ObjectId>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>630</IntrospectionStateNumber>
+      <IntrospectionStateNumber>655</IntrospectionStateNumber>
       <Current>1</Current>
-      <Relations>sequence|table|16515|16517|1
+      <Relations>sequence|table|16575|16577|1
 </Relations>
     </database>
     <database id="3" parent="1" name="postgres">
@@ -867,7 +867,7 @@ UC/10
 </Acl>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>631</IntrospectionStateNumber>
+      <IntrospectionStateNumber>656</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <schema id="18" parent="2" name="users">
@@ -972,52 +972,40 @@ UC/10
       <HandlerId>335</HandlerId>
       <Type>index</Type>
     </access-method>
-    <sequence id="31" parent="17" name="tarea_table_cveproyecto_seq">
-      <ObjectId>16515</ObjectId>
+    <sequence id="31" parent="17" name="proyecto_cveproyecto_seq">
+      <ObjectId>16575</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>627</StateNumber>
+      <StateNumber>654</StateNumber>
       <DataType>integer|0s</DataType>
     </sequence>
-    <table id="32" parent="17" name="tarea_table">
-      <ObjectId>16517</ObjectId>
+    <table id="32" parent="17" name="proyecto">
+      <ObjectId>16577</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>627</StateNumber>
+      <StateNumber>654</StateNumber>
     </table>
-    <column id="33" parent="32" name="cveproyecto">
+    <table id="33" parent="17" name="tarea">
+      <ObjectId>16583</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>654</StateNumber>
+    </table>
+    <column id="34" parent="32" name="cveproyecto">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>627</StateNumber>
-      <DefaultExpression>nextval(&apos;tarea_table_cveproyecto_seq&apos;::regclass)</DefaultExpression>
+      <StateNumber>654</StateNumber>
+      <DefaultExpression>nextval(&apos;proyecto_cveproyecto_seq&apos;::regclass)</DefaultExpression>
       <TypeId>23</TypeId>
     </column>
-    <column id="34" parent="32" name="nombretarea">
+    <column id="35" parent="32" name="nombre_proyecto">
       <Position>2</Position>
-      <DataType>varchar(100)|0s</DataType>
-      <StateNumber>627</StateNumber>
+      <Comment>Es el nombre con el que se identifica al proyecto</Comment>
+      <DataType>varchar(150)|0s</DataType>
+      <StateNumber>654</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="35" parent="32" name="fechaentrega">
-      <Position>3</Position>
-      <DataType>varchar(30)|0s</DataType>
-      <StateNumber>627</StateNumber>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="36" parent="32" name="predecesor">
-      <Position>4</Position>
-      <DataType>integer|0s</DataType>
-      <StateNumber>627</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="37" parent="32" name="porcentaje">
-      <Position>5</Position>
-      <DataType>integer|0s</DataType>
-      <StateNumber>627</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <index id="38" parent="32" name="tarea_table_pkey">
-      <ObjectId>16521</ObjectId>
-      <StateNumber>627</StateNumber>
+    <index id="36" parent="32" name="proyecto_pkey">
+      <ObjectId>16581</ObjectId>
+      <StateNumber>654</StateNumber>
       <ColNames>cveproyecto</ColNames>
       <Unique>1</Unique>
       <Primary>1</Primary>
@@ -1025,12 +1013,53 @@ UC/10
       <CollationIds>0</CollationIds>
       <ClassIds>1978</ClassIds>
     </index>
-    <key id="39" parent="32" name="tarea_table_pkey">
-      <ObjectId>16522</ObjectId>
-      <StateNumber>627</StateNumber>
+    <key id="37" parent="32" name="proyecto_pkey">
+      <ObjectId>16582</ObjectId>
+      <StateNumber>654</StateNumber>
       <ColNames>cveproyecto</ColNames>
       <Primary>1</Primary>
-      <UnderlyingIndexName>tarea_table_pkey</UnderlyingIndexName>
+      <UnderlyingIndexName>proyecto_pkey</UnderlyingIndexName>
     </key>
+    <column id="38" parent="33" name="cveproyecto">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>654</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="39" parent="33" name="nombre_tarea">
+      <Position>2</Position>
+      <DataType>varchar(200)|0s</DataType>
+      <StateNumber>654</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="40" parent="33" name="fecha_entrega">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <StateNumber>654</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="41" parent="33" name="predecesor">
+      <Position>4</Position>
+      <DataType>integer|0s</DataType>
+      <StateNumber>654</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="42" parent="33" name="porcentaje">
+      <Position>5</Position>
+      <DataType>integer|0s</DataType>
+      <StateNumber>654</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <foreign-key id="43" parent="33" name="fk_proyecto">
+      <ObjectId>16586</ObjectId>
+      <StateNumber>654</StateNumber>
+      <ColNames>cveproyecto</ColNames>
+      <RefTableId>16577</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>proyecto</RefTableName>
+      <RefKeyName>proyecto_pkey</RefKeyName>
+      <RefColNames>cveproyecto</RefColNames>
+    </foreign-key>
   </database-model>
 </dataSource>

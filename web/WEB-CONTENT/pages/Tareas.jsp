@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#"> Mis proyectos</a>
+                    <a class="nav-link active" href="#" onclick="proyectos()"> Mis proyectos</a>
                 </li>
             </ul>
         </div>
@@ -47,8 +47,7 @@
     </div>
     <div class="input-group mb-3">
         <input type="text" class="form-control" id="Buscar" placeholder="Buscar Actividad / Fecha / Nombre">
-        <button class="btn btn-outline-secondary" type="button" id="btnBuscar"><i class="fa fa-search"
-                                                                                  aria-hidden="true"></i></button>
+        <button class="btn btn-outline-secondary" type="button" id="btnBuscar"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
 
     <div class="card">
