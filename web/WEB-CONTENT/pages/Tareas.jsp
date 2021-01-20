@@ -13,6 +13,8 @@
     <link rel="stylesheet" type="text/css" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
+    <script src="../js/jquery-3.5.1.js"></script>
+
     <title>Gantt</title>
 </head>
 

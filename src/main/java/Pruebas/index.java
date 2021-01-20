@@ -1,16 +1,21 @@
 package Pruebas;
 
+import DAO.Proyecto.ProyectoDAO;
+import DAO.Proyecto.sqlProyectoDAO;
 import DAO.Tarea.TareaDAO;
 import DAO.Tarea.sqlTareaDAO;
+import Modelo.Proyecto;
 import Modelo.Tarea;
 
 import java.util.ArrayList;
 
 public class index {
     public static void main(String[] args){
-        Tarea tarea2 = new Tarea("Nuevo proyecto", "20/02/2021", 3, 45);
-        DAO.Tarea.sqlTareaDAO insertTarea = new DAO.Tarea.sqlTareaDAO();
-        insertTarea.insertar(tarea2);
+
+        ProyectoDAO proyecto = new sqlProyectoDAO();
+        ArrayList<Proyecto> lista = proyecto.listar(1);
+        System.out.println(lista);
+
 
         TareaDAO sql = new sqlTareaDAO();
         ArrayList<Tarea> arr =  sql.listar(1);

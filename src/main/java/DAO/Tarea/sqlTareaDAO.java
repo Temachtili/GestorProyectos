@@ -21,7 +21,7 @@ public class sqlTareaDAO implements TareaDAO {
     private ResultSet rs;
     private PreparedStatement ps;
     //Query's
-    private final String INSERTAR = "insert into Tarea(nombretarea, fechaentrega, predecesor, porcentaje) values(?, ?, ?, ?);";
+    private final String INSERTAR = "insert into Tarea(cveProyecto, nombretarea, fechaentrega, predecesor, porcentaje) values(?, ?, ?, ?, ?);";
     private final String BORRAR = "delete from Tarea where cveproyecto = ?;";
     private final String LISTAR = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
     private final String CAMBIAR = "update Tarea set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
@@ -36,6 +36,7 @@ public class sqlTareaDAO implements TareaDAO {
         }
     }
 
+    @Override
     public int insertar(Tarea ob) {
 
         int cveProyecto = 0;
@@ -61,6 +62,7 @@ public class sqlTareaDAO implements TareaDAO {
         return cveProyecto;
     }
 
+    @Override
     public int eliminar(Tarea ob) {
 
         int cveProyecto = 0;
@@ -110,6 +112,7 @@ public class sqlTareaDAO implements TareaDAO {
         return mapTarea;
     }
 
+    @Override
     public int cambiar(Tarea ob) {
         int cveProyecto = 0;
         try{
@@ -132,12 +135,14 @@ public class sqlTareaDAO implements TareaDAO {
 
     private void incorporarDatos(Tarea ob, String query) throws SQLException {
         ps = conector.prepareStatement(query);
-        ps.setString(1, ob.getNombreTarea());
-        ps.setString(2, ob.getFechaEntrega());
-        ps.setInt(3, ob.getPredecesor());
-        ps.setInt(4, ob.getPorcentaje());
+        ps.setInt(1, ob.getCveProyecto());
+        ps.setString(2, ob.getNombreTarea());
+        ps.setString(3, ob.getFechaEntrega());
+        ps.setInt(4, ob.getPredecesor());
+        ps.setInt(5, ob.getPorcentaje());
     }
 
+    @Override
     public ArrayList<Tarea> listar(int id) {
         ArrayList<Tarea> lista = new ArrayList<>();
 
@@ -148,7 +153,7 @@ public class sqlTareaDAO implements TareaDAO {
             rs = ps.getResultSet();
 
             while (rs.next()){
-                lista.add(new Tarea(rs.getInt("cveProyecto"), rs.getString("nombretarea"), rs.getString("fechaentrega"), rs.getInt("predecesor"), rs.getInt("porcentaje")));
+                lista.add(new Tarea(rs.getInt("cveProyecto"), rs.getString("nombre_tarea"), rs.getString("fecha_entrega"), rs.getInt("predecesor"), rs.getInt("porcentaje")));
             }
         }catch (Exception e){
             System.out.println(e.toString() + " en listar() - sqlTareaDAO");
@@ -160,6 +165,7 @@ public class sqlTareaDAO implements TareaDAO {
         return lista;
     }
 
+    @Override
     public void closeConnections() {
         try {
             if (conector != null){  conector.close();   }

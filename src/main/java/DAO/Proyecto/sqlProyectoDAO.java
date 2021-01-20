@@ -16,7 +16,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
     private ResultSet rs;
     private PreparedStatement ps;
     //Query's
-    private final String INSERTAR = "insert into Proyecto(nombreProyecto) values (?);";
+    private final String INSERTAR = "insert into Proyecto(nombre_proyecto) values (?);";
     private final String BORRAR = "delete from Proyecto where cveProyecto = ?;";
     private final String LISTAR = "select * from Proyecto;";
 
@@ -29,6 +29,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
         }
     }
 
+    @Override
     public int insertar(Proyecto ob) {
         int cveProyecto = 0;
 
@@ -54,6 +55,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
         return cveProyecto;
     }
 
+    @Override
     public int eliminar(Proyecto ob) {
         int cveProyecto = 0;
 
@@ -81,8 +83,9 @@ public class sqlProyectoDAO implements ProyectoDAO {
         return 0;
     }
 
-    public ArrayList<Proyecto> listar() {
-        ArrayList<Proyecto> lista = new ArrayList<Proyecto>();
+    @Override
+    public ArrayList<Proyecto> listar(int id) {
+        ArrayList<Proyecto> lista = new ArrayList<>();
 
         try{
             ps = conector.prepareStatement(LISTAR);
@@ -91,7 +94,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
             rs = ps.getResultSet();
 
             while (rs.next()){
-                lista.add(new Proyecto(rs.getInt("cveProyecto"), rs.getString("nombreProyecto")));
+                lista.add(new Proyecto(rs.getInt("cveProyecto"), rs.getString("nombre_proyecto")));
             }
 
         }catch (Exception e){
@@ -104,6 +107,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
         return lista;
     }
 
+    @Override
     public void closeConnections() {
         try {
             if (conector != null){  conector.close();   }

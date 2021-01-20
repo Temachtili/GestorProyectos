@@ -1,3 +1,10 @@
+<%@ page import="DAO.Tarea.TareaDAO" %>
+<%@ page import="DAO.Proyecto.ProyectoDAO" %>
+<%@ page import="DAO.Proyecto.sqlProyectoDAO" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Modelo.Proyecto" %>
+<%@ page import="Modelo.Tarea" %>
+<%@ page import="com.google.gson.Gson" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="es">
@@ -12,8 +19,56 @@
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <script src="../js/jquery-3.5.1.js"></script>
+    <script src="../js/main.js"></script>
 
     <title>Gantt</title>
+
+    <%
+        ProyectoDAO p = new sqlProyectoDAO();
+        ArrayList<Proyecto> lista = p.listar(1);
+
+        ArrayList<String> nombres = new ArrayList<>();
+
+        for (Proyecto pro : lista){ nombres.add(pro.getNombreProyecto()); }
+
+        System.out.println(nombres);
+
+    %>
+
+    <style>
+        .lista:hover{
+            cursor: pointer;
+        }
+    </style>
+    
+    <script>
+        let lista = <%=new Gson().toJson(nombres)%>;
+
+        $( function (){
+            for (let i of lista){
+                console.log("dato " + i);
+
+                const contenedor = document.getElementById("lista-proyectos");
+                let listaProyectos = `
+                    <li id="`+ i +`" class="list-group-item lista" onclick="llamarTareas("`+i+`")">
+                        <div class="row">
+                            <div class="col-10">`+i+`</div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Nuevo_Proyecto">Editar</button>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Confirmar_Borrar">Borrar</button>
+                            </div>
+                        </div>
+                    </li>`;
+
+                contenedor.insertAdjacentHTML("beforeend", listaProyectos);
+
+            }
+        });
+    </script>
+
 </head>
 
 <body>
@@ -46,50 +101,11 @@
 
     <div class="input-group mb-3">
         <input type="text" class="form-control" id="Buscar" placeholder="Buscar proyecto">
-        <button class="btn btn-outline-secondary" type="button" id="btnBuscar"><i class="fa fa-search"
-                                                                                  aria-hidden="true"></i></button>
+        <button class="btn btn-outline-secondary" type="button" id="btnBuscar"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <div class="card">
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-10">
-                        Proyecto 2
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Nuevo_Proyecto">Editar</button>
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Confirmar_Borrar">Borrar</button>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-10">
-                        Proyecto 2
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Nuevo_Proyecto">Editar</button>
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Confirmar_Borrar">Borrar</button>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col-10">
-                        Proyecto 2
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Nuevo_Proyecto">Editar</button>
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Confirmar_Borrar">Borrar</button>
-                    </div>
-                </div>
-            </li>
+        <ul id="lista-proyectos" class="list-group list-group-flush">
+
         </ul>
     </div>
 
