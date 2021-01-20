@@ -23,7 +23,7 @@
     <%@ page import="com.google.gson.Gson" %>
     <%
         TareaDAO sql = new sqlTareaDAO();
-        ArrayList<Tarea> arr =  sql.listar();
+        ArrayList<Tarea> arr =  sql.listar(2);
 
         ArrayList<String> nombresTareas = new ArrayList<>();
 

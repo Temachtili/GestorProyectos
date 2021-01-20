@@ -13,6 +13,10 @@ public class Proyecto {
         this.nombreProyecto = nombreProyecto;
     }
 
+    public Proyecto(String nombreProyecto) {
+        this.nombreProyecto = nombreProyecto;
+    }
+
     public int getCveProyecto() {
         return cveProyecto;
     }
