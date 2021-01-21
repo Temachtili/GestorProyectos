@@ -3,6 +3,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="Modelo.Tarea" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="es">
@@ -15,24 +16,70 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+
+    <!--    Archivos js locales    -->
+    <script src="../js/jquery-3.5.1.js"></script>
+    <script src="../js/Tareas.js"></script>
+    <script src="../js/main.js"></script>
+
+
+    <!--    Archivos css locales    -->
+    <link href="../css/jquery-ui.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
-    <script src="../js/jquery-3.5.1.js"></script>
-    <script src="../js/Tareas.js"></script>
+    <!--    Archivos js externos    -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-    <script
-            src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
-            integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
-            crossorigin="anonymous"></script>
 
     <title>Gantt</title>
 
     <%
+        //  Inicio, obtener datos del proyecto seleccionado
         sqlTareaDAO sql = new sqlTareaDAO();
-        List lista = sql.listar(Integer.parseInt(request.getParameter("cveProyecto")));
+        ArrayList<Tarea> lista = sql.listar(Integer.parseInt(request.getParameter("cveProyecto")));
+
+        //  Autocomplete
+        sqlTareaDAO s = new sqlTareaDAO();
+        ArrayList<Tarea> arr =  s.listar(2);
+
+        ArrayList<String> name = new ArrayList<>();
+
+        for (Tarea tarea : arr) { name.add(tarea.getNombreTarea()); }
+
     %>
+
+    <script>
+        $(function (){
+
+            var nombres = <%= new Gson().toJson(name) %>;
+
+            $('#Buscar').autocomplete({
+                source: nombres,
+                select: function (event, item){
+                    var params = {
+                        "tarea": item.item.value
+                    }
+
+                    $.get("consultas/cConsultaTR.jsp", params, function(tarea){
+                        $('#Titulo').text(tarea['nombreTarea']);
+                        $('#PorcentajeNum').text(tarea['porcentaje'] + "%");
+                        $('#PorcentajeNum').attr('name',tarea['porcentaje']);
+                        $('#PorcentajeBar').attr('style',"width: " + tarea['porcentaje']+"%");
+                        $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(tarea['porcentaje']));
+                        $('#Fecha').text(tarea['fechaEntrega']);
+
+                        document.getElementById("nombreTarea").value = tarea["nombreTarea"];
+                        document.getElementById("fechaEntrega").value =  tarea["fechaEntrega"];
+                        document.getElementById("progreso").value =  tarea["porcentaje"];
+                    });
+                }
+            });
+        });
+    </script>
+
     <script>
         $(function () {
             let lista = <%=new Gson().toJson(lista)%>;
