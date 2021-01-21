@@ -2,9 +2,6 @@
 <%@ page import="DAO.Proyecto.sqlProyectoDAO" %>
 <%@ page import="Modelo.Proyecto" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.TreeMap" %>
-<%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
@@ -34,7 +31,6 @@
     <%
         sqlProyectoDAO p = new sqlProyectoDAO();
         ArrayList<Proyecto> lista =  p.traerTodo();
-        System.out.println("lista " + lista);
 
         if(request.getParameter("NombreProyecto") != null){
             ProyectoDAO sql = new sqlProyectoDAO();
@@ -55,39 +51,13 @@
         /*  Creacion del array para autocompletar el input.text */
         ArrayList<String> name = new ArrayList<>();
         for (Proyecto proyecto : lista) { name.add(proyecto.getNombreProyecto());  }
-        System.out.println("nombres: " + name);
 
     %>
     
     <script>
-        let lista = <%=new Gson().toJson(lista)%>;
-        const ext = <%= lista.size() %>;
-        let listaProyectos;
-
-        $( function (){
-            for (var i = 0; i < ext; i++){
-                const contenedor = document.getElementById("lista-proyectos");
-                 listaProyectos = `
-                    <li id="`+ lista[i]['cveProyecto'] +`" class="list-group-item lista" role="button">
-                        <div class="row">
-                            <div class="col-10">
-                                <p name="`+ lista[i]['nombreProyecto'] +`">`+ lista[i]['nombreProyecto'] +`</p>
-                            </div>
-                            <div class="col-1">
-                                <button type="button" class="btn btn-primary" editar cve="`+ lista[i]['cveProyecto'] +`" name="`+ lista[i]['nombreProyecto'] +`">Editar</button>
-                            </div>
-                            <div class="col-1">
-                                <button type="button" class="btn btn-danger" borrar cve="`+ lista[i]['cveProyecto'] +`">Borrar</button>
-                            </div>
-                        </div>
-                    </li>`;
-                contenedor.insertAdjacentHTML("beforeend", listaProyectos);
-
-            }
-        });
-
         //  Consulta proyectos
-        $(function (){
+
+            $(buscarProyectos(" "));
 
             var nombres = <%= new Gson().toJson(name) %>;
 
@@ -97,29 +67,182 @@
                     "proyectos": proyectos
                 }
 
-                $.get("consultas/cConsultaProyecto.jsp", params, function(response) {
+                $.ajax({
+                    url: 'consultas/cConsultaProyecto.jsp',
+                    type: 'GET',
+                    dataType: 'html',
+                    data: params
+
+                })
+                .done(function (response){
                     $("#lista-proyectos").html(response);
-                });
+                })
+                .fail(function (){
+                    console.log("error")
+                })
             }
 
-            /*$('#Buscar').autocomplete({
-                $.get("consultas/cConsultaProyecto.jsp", params, function(response) {
-                    listaProyectos = `
-                        <li id="`+ proyecto[i]['cveProyecto'] +`" class="list-group-item lista" role="button">
-                            <div class="row">
-                                <div class="col-10">
-                                    <p name="`+ lista[i]['nombreProyecto'] +`">`+ lista[i]['nombreProyecto'] +`</p>
-                                </div>
-                                <div class="col-1">
-                                    <button type="button" class="btn btn-primary" editar cve="`+ lista[i]['cveProyecto'] +`" name="`+ lista[i]['nombreProyecto'] +`">Editar</button>
-                                </div>
-                                <div class="col-1">
-                                    <button type="button" class="btn btn-danger" borrar cve="`+ lista[i]['cveProyecto'] +`">Borrar</button>
-                                </div>
-                            </div>
-                        </li>`;
-                    contenedor.insertAdjacentHTML("beforeend", listaProyectos);
-                })
+            $(document).on('keyup', '#Buscar', function (){
+                var valor = $(this).val();
+                if (valor != ""){
+                    buscarProyectos(valor);
+                }else{
+                    buscarProyectos(" ");
+                }
+            })
+
+    </script>
+
+    <script>
+        function borrar(x){
+            var cve = $(x).attr('cve');
+            console.log(cve);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#dd3333',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    );
+
+                    var parametro = {"Borrar" : cve};
+                    $.ajax({
+                        data:  parametro,
+                        url:   'Proyectos.jsp',
+                        type:  'post',
+                        success:  function () {
+                            $('#' + cve).remove();
+                            document.getElementById("1");
+                        }
+                    });
+                }
+            });
+        }
+
+        function editar(x){
+            var name = $(x).attr('name');
+            var cve = $(x).attr('cve');
+            Swal.fire({
+                title: "Editar nombre",
+                input: 'text',
+                inputValue: name,
+                inputPlaceholder: 'Nombre del proyecto',
+                showCancelButton: true
+            }).then((result) => {
+                if (result.value) {
+                    var parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
+                    $.ajax({
+                        data:  parametro,
+                        url:   'Proyectos.jsp',
+                        type:  'post',
+                        success:  function () {
+                            $("p[name='"+name+"']").text(result.value);
+                        }
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            //  Agregar proyectos
+            $('#btn_nuevo').click(function () {
+                Swal.fire({
+                    title: "Crear nuevo proyecto",
+                    input: 'text',
+                    inputPlaceholder: 'Nombre del proyecto',
+                    showCancelButton: true
+                }).then((result) => {
+                    if (result.value) {
+                        var parametro = {"NombreProyecto" : result.value};
+                        $.ajax({
+                            data:  parametro,
+                            url:   'Proyectos.jsp',
+                            type:  'post',
+                            success:  function () {
+                                $('#lista-proyectos').append(
+                                    '<li class="list-group-item" id="'+$('#Nombre_Proyecto').val()+'">'+
+                                    '<div class="row">' +
+                                    '<div class="col-10">' +
+                                    '<p name="'+result.value+'">'+result.value +'</p>' +
+                                    '</div>' +
+                                    '<div class="col-1">' +
+                                    '<button type="button" class="btn btn-primary" editar name="'+result.value+'">Editar</button>' +
+                                    '</div>' +
+                                    '<div class="col-1">' +
+                                    '   <button type="button" class="btn btn-danger" borrar name="'+result.value+'">Borrar</button>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</li>');
+                                location.reload();
+                            }
+                        });
+                    }
+                });
+            });
+
+            //  Borrar proyectos
+            /*$('[borrar]').click(function () {
+                var cve = $(this).attr('cve');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#dd3333',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        );
+
+                        var parametro = {"Borrar" : cve};
+                        $.ajax({
+                            data:  parametro,
+                            url:   'Proyectos.jsp',
+                            type:  'post',
+                            success:  function () {
+                                $('#' + cve).remove();
+                            }
+                        });
+                    }
+                });
+            });*/
+
+            //  Editar proyectos
+            /*$('[editar]').click(function () {
+                var name = $(this).attr('name');
+                var cve = $(this).attr('cve');
+                Swal.fire({
+                    title: "Editar nombre",
+                    input: 'text',
+                    inputValue: name,
+                    inputPlaceholder: 'Nombre del proyecto',
+                    showCancelButton: true
+                }).then((result) => {
+                    if (result.value) {
+                        var parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
+                        $.ajax({
+                            data:  parametro,
+                            url:   'Proyectos.jsp',
+                            type:  'post',
+                            success:  function () {
+                                $("p[name='"+name+"']").text(result.value);
+                            }
+                        });
+                    }
+                });
             });*/
         });
 
@@ -170,104 +293,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
         crossorigin="anonymous"></script>
-
-<script>
-    $(document).ready(function() {
-        //  Agregar proyectos
-        $('#btn_nuevo').click(function () {
-            Swal.fire({
-                title: "Crear nuevo proyecto",
-                input: 'text',
-                inputPlaceholder: 'Nombre del proyecto',
-                showCancelButton: true
-            }).then((result) => {
-                if (result.value) {
-                    var parametro = {"NombreProyecto" : result.value};
-                    $.ajax({
-                        data:  parametro,
-                        url:   'Proyectos.jsp',
-                        type:  'post',
-                        success:  function () {
-                            $('#lista-proyectos').append(
-                            '<li class="list-group-item" id="'+$('#Nombre_Proyecto').val()+'">'+
-                                '<div class="row">' +
-                                    '<div class="col-10">' +
-                                        '<p name="'+result.value+'">'+result.value +'</p>' +
-                                    '</div>' +
-                                    '<div class="col-1">' +
-                                        '<button type="button" class="btn btn-primary" editar name="'+result.value+'">Editar</button>' +
-                                    '</div>' +
-                                    '<div class="col-1">' +
-                                    '   <button type="button" class="btn btn-danger" borrar name="'+result.value+'">Borrar</button>' +
-                                    '</div>' +
-                                '</div>' +
-                            '</li>');
-                            location.reload();
-                        }
-                    });
-                }
-            });
-        });
-
-        //  Borrar proyectos
-        $('[borrar]').click(function () {
-            var cve = $(this).attr('cve');
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#dd3333',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    );
-
-                    var parametro = {"Borrar" : cve};
-                    $.ajax({
-                        data:  parametro,
-                        url:   'Proyectos.jsp',
-                        type:  'post',
-                        success:  function () {
-                            $('#' + cve).remove();
-                        }
-                    });
-                }
-            });
-        });
-
-        //  Editar proyectos
-        $('[editar]').click(function () {
-            var name = $(this).attr('name');
-            var cve = $(this).attr('cve');
-            Swal.fire({
-                title: "Editar nombre",
-                input: 'text',
-                inputValue: name,
-                inputPlaceholder: 'Nombre del proyecto',
-                showCancelButton: true
-            }).then((result) => {
-                if (result.value) {
-                    var parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
-                    $.ajax({
-                        data:  parametro,
-                        url:   'Proyectos.jsp',
-                        type:  'post',
-                        success:  function () {
-                            $("p[name='"+name+"']").text(result.value);
-                        }
-                    });
-                }
-            });
-        });
-    });
-
-</script>
 
 </body>
 

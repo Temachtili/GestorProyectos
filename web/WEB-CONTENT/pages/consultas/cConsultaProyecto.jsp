@@ -1,5 +1,4 @@
 <%@ page import="DAO.Proyecto.sqlProyectoDAO" %>
-<%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="Modelo.Proyecto"%><%@ page import="java.util.ArrayList"%><%--
 <%--
@@ -9,29 +8,30 @@
   Time: 11:25 a. m.
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="application/json; charset=UTF-8"%>
+<%@ page contentType="text/html; ISO-8859-1; charset=UTF-8"%>
 <%
-  ArrayList<Proyecto> proyecto;
-  if (request.getParameter("proyectos") != null) {
+    ArrayList<Proyecto> proyecto;
+    if (request.getParameter("proyectos") != null) {
         sqlProyectoDAO tar = new sqlProyectoDAO();
         proyecto = tar.listar(request.getParameter("proyectos"));
 
-        String consulta = "";
+        StringBuilder consulta = new StringBuilder();
         PrintWriter outt = response.getWriter();
         for(Proyecto value: proyecto){
-             consulta += " <li id=\""+ value.getNombreProyecto() + "\" class=\"list-group-item lista\" role=\"button\">\n" +
-    "                        <div class=\"row\">\n" +
-    "                            <div class=\"col-10\">\n" +
-    "                                <p name=\""+ value.getNombreProyecto() + "\">\""+ value.getNombreProyecto() +"\"</p>\n" +
-    "                            </div>\n" +
-    "                            <div class=\"col-1\">\n" +
-    "                                <button type=\"button\" class=\"btn btn-primary\" editar cve=\""+ value.getCveProyecto() + "\" name=\""+ value.getNombreProyecto() +"\">Editar</button>\n" +
-    "                            </div>\n" +
-    "                            <div class=\"col-1\">\n" +
-    "                                <button type=\"button\" class=\"btn btn-danger\" borrar cve=\""+ value.getCveProyecto() +"\">Borrar</button>\n" +
-    "                            </div>\n" +
-    "                        </div>\n" +
-    "                    </li>";
+             consulta.append(" <li id=\"").append(value.getNombreProyecto()).append("\" class=\"list-group-item lista\" role=\"button\">\n")
+                     .append("                        <div class=\"row\">\n")
+                     .append("                            <div class=\"col-10\">\n")
+                     .append("                                <p name=\"").append(value.getNombreProyecto()).append("\">").append(value.getNombreProyecto()).append("</p>\n")
+                     .append("                            </div>\n")
+                     .append("                            <div class=\"col-1\">\n")
+                     .append("                                <button type=\"button\" class=\"btn btn-primary\" editar onClick= \"editar(this)\" cve=\"").append(value.getCveProyecto()).append("\" name=\"").append(value.getNombreProyecto()).append("\">Editar</button>\n")
+                     .append("                            </div>\n")
+                     .append("                            <div class=\"col-1\">\n")
+                     .append("                                <button type=\"button\" class=\"btn btn-danger\" borrar onClick= \"borrar(this)\" cve=\"").append(value.getCveProyecto()).append("\">Borrar</button>\n")
+                     .append("                            </div>\n")
+                     .append("                        </div>\n")
+                     .append("                    </li>");
         }
+        outt.print(consulta);
   }
 %>
