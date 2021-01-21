@@ -27,6 +27,13 @@ public class Tarea {
         this.porcentaje = porcentaje;
     }
 
+    public Tarea(int cveProyecto, String nombreTarea, String fechaEntrega, int porcentaje) {
+        this.cveProyecto = cveProyecto;
+        this.nombreTarea = nombreTarea;
+        this.fechaEntrega = fechaEntrega;
+        this.porcentaje = porcentaje;
+    }
+
     public int getCveProyecto() {
         return cveProyecto;
     }

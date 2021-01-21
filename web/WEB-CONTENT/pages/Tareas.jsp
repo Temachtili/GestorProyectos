@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
     <script src="../js/jquery-3.5.1.js"></script>
+    <script src="../js/Tareas.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script
@@ -31,22 +32,14 @@
     <%
         TareaDAO sql = new sqlTareaDAO();
         List lista = sql.listar(1);
-
-
-        if(request.getParameter("Nombre") != null){
-            TareaDAO nuevaTarea = new sqlTareaDAO();
-            nuevaTarea.insertar(new Tarea(1,request.getParameter("Nombre"),request.getParameter("Fecha"),4,Integer.parseInt(request.getParameter("Porcentaje"))));
-        }
-
     %>
     <script>
-        let lista = <%=new Gson().toJson(lista)%>;
-        console.log(lista);
-        const ext = <%= lista.size() %>;
         $(function () {
+            let lista = <%=new Gson().toJson(lista)%>;
+            const ext = <%= lista.size() %>;
             for (var i = 0; i < ext; i++) {
                 $('#' + mes(lista[i]['fechaEntrega'].split("-")[1])).append(
-                    '<li class="list-group-item" role="button" Tarea="'+lista[i]['nombreTarea']+'" noTarea="'+i+'">' +
+                    '<li class="list-group-item" role="button" Tarea="'+lista[i]['nombreTarea']+'" noTarea="'+lista[i]['predecesor']+'">' +
                     '<div class="row mb-3">' +
                     '<div class="col-sm-4">' + lista[i]['nombreTarea'] + '</div>' +
                     '<div class="col-sm-8">' +
@@ -87,6 +80,162 @@
                 '</div>' +
                 '</div>'
             );
+
+            $('[Tarea]').click(function (){
+                var nombreTarea = $(this).attr('Tarea');
+                var numeroTarea = $(this).attr('noTarea');
+                $('#Titulo').text(lista[numeroTarea]['nombreTarea']);
+                $('#PorcentajeNum').text(lista[numeroTarea]['porcentaje'] + "%");
+                $('#PorcentajeNum').attr('name',lista[numeroTarea]['porcentaje']);
+                $('#PorcentajeBar').attr('style',"width: " + lista[numeroTarea]['porcentaje']+"%");
+                $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
+                $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
+            });
+
+            $('[agregar]').click(function () {
+                Swal.fire({
+                    title: "Crear nueva tarea",
+                    html: '' +
+                        '<div class="text-start">' +
+                        '<div class="mb-3">' +
+                        '<label class="form-label">Nombre tarea</label>' +
+                        '<input type="text" class="form-control swal2-input" id="TareaForm" placeholder="Nombre">' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label class="form-label">Porcentaje</label>' +
+                        '<div class="row mb-3">' +
+                        '<div class="col-3">' +
+                        '<input type="number" value="80" step="5" class="form-control" id="PorcentajeNumForm">' +
+                        '</div>' +
+                        '<div class="col-9">' +
+                        '<input type="range" class="form-range" min="0" max="100" step="5" id="PorcentajeBarForm" value="80">' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label class="form-label">Fecha</label>' +
+                        '<input type="date" class="form-control swal2-input" id="FechaForm">' +
+                        '</div>' +
+                        '</div>',
+                    showCancelButton: true,
+                    didOpen: () => {
+                        inputNumber = Swal.getContent().querySelector('#PorcentajeBarForm')
+                        inputRange = Swal.getContent().querySelector('#PorcentajeNumForm')
+
+                        inputNumber.addEventListener('input', () => {
+                            inputRange.value = inputNumber.value
+                        })
+
+                        inputRange.addEventListener('change', () => {
+                            inputNumber.value = inputRange.value
+                        })
+                    }
+                }).then((result) => {
+                    if (result.value) { //validacion de datos
+                        var parametro = {
+                            "Nombre": $('#TareaForm').val(),
+                            "Porcentaje": $('#PorcentajeBarForm').val(),
+                            "Fecha": $('#FechaForm').val()
+                        };
+                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function() {
+                            $('#' + mes($('#FechaForm').val().split("-")[1])).append(
+                                '<li class="list-group-item" role="button" Tarea="'+$('#TareaForm').val()+'" noTarea="5">' +
+                                '<div class="row mb-3">' +
+                                '<div class="col-sm-4">' + $('#TareaForm').val() + '</div>' +
+                                '<div class="col-sm-8">' +
+                                '<div class="progress">' +
+                                '<div class="progress-bar progress-bar-striped progress-bar-animated ' + color($('#PorcentajeBarForm').val()) + '" role="progressbar" style="width: ' + $('#PorcentajeBarForm').val() + '%"></div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</li>'
+                            );
+                        });
+                    }
+                });
+            });
+
+            $('[editar]').click(function () {
+                var name = $(this).attr('name');
+                Swal.fire({
+                    title: "Editar tarea",
+                    html: '' +
+                        '<div class="text-start">' +
+                        '<div class="mb-3">' +
+                        '<label class="form-label">Nombre tarea</label>' +
+                        '<input type="text" class="form-control swal2-input" id="TareaForm" placeholder="Nombre" value="'+$('#Titulo').text()+'">' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label class="form-label">Porcentaje</label>' +
+                        '<div class="row mb-3">' +
+                        '<div class="col-3">' +
+                        '<input type="number" value="'+$('#PorcentajeNum').attr('name')+'" step="5" class="form-control" id="PorcentajeNumForm">' +
+                        '</div>' +
+                        '<div class="col-9">' +
+                        '<input type="range" class="form-range" min="0" max="100" step="5" id="PorcentajeBarForm" value="'+$('#PorcentajeNum').attr('name')+'">' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label class="form-label">Fecha</label>' +
+                        '<input type="date" value="'+$('#Fecha').text()+'" class="form-control swal2-input" id="FechaForm">' +
+                        '</div>' +
+                        '</div>',
+                    showCancelButton: true,
+                    didOpen: () => {
+                        inputNumber = Swal.getContent().querySelector('#PorcentajeBarForm')
+                        inputRange = Swal.getContent().querySelector('#PorcentajeNumForm')
+
+                        inputNumber.addEventListener('input', () => {
+                            inputRange.value = inputNumber.value
+                        })
+
+                        inputRange.addEventListener('change', () => {
+                            inputNumber.value = inputRange.value
+                        })
+                    }
+                }).then((result) => {
+                    if (result.value) {
+                        var parametro = {
+                            "Nombre": $('#TareaForm').val(),
+                            "Porcentaje": $('#PorcentajeBarForm').val(),
+                            "Fecha": $('#FechaForm').val(),
+                            "Editar": "true"
+                        };
+                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function() {
+                            $("p[name='" + name + "']").text(result.value);
+                        });
+                    }
+                });
+            });
+
+            $('[borrar]').click(function () {
+                var name = $(this).attr('name');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        );
+
+                        var parametro = {"Borrar": name};
+                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function() {
+                            $('#' + name).remove();
+                        });
+
+
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -279,250 +428,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
         crossorigin="anonymous"></script>
-
-<script>
-    $(document).ready(function () {
-        $('[Tarea]').click(function (){
-            var nombreTarea = $(this).attr('Tarea');
-            var numeroTarea = $(this).attr('noTarea');
-            $('#Titulo').text(lista[numeroTarea]['nombreTarea']);
-            $('#PorcentajeNum').text(lista[numeroTarea]['porcentaje'] + "%");
-            $('#PorcentajeNum').attr('name',lista[numeroTarea]['porcentaje']);
-            $('#PorcentajeBar').attr('style',"width: " + lista[numeroTarea]['porcentaje']+"%");
-            $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
-            $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
-        });
-
-        $('[agregar]').click(function () {
-            Swal.fire({
-                title: "Crear nueva tarea",
-                html: '' +
-                    '<div class="text-start">' +
-                    '<div class="mb-3">' +
-                    '<label class="form-label">Nombre tarea</label>' +
-                    '<input type="text" class="form-control swal2-input" id="TareaForm" placeholder="Nombre">' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label class="form-label">Porcentaje</label>' +
-                    '<div class="row mb-3">' +
-                    '<div class="col-3">' +
-                    '<input type="number" value="80" step="5" class="form-control" id="PorcentajeNumForm">' +
-                    '</div>' +
-                    '<div class="col-9">' +
-                    '<input type="range" class="form-range" min="0" max="100" step="5" id="PorcentajeBarForm" value="80">' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label class="form-label">Fecha</label>' +
-                    '<input type="date" class="form-control swal2-input" id="FechaForm">' +
-                    '</div>' +
-                    '</div>',
-                showCancelButton: true,
-                didOpen: () => {
-                    inputNumber = Swal.getContent().querySelector('#PorcentajeBarForm')
-                    inputRange = Swal.getContent().querySelector('#PorcentajeNumForm')
-
-                    inputNumber.addEventListener('input', () => {
-                        inputRange.value = inputNumber.value
-                    })
-
-                    inputRange.addEventListener('change', () => {
-                        inputNumber.value = inputRange.value
-                    })
-                }
-            }).then((result) => {
-                if (result.value) { //validacion de datos
-                    var parametro = {
-                        "Nombre": $('#TareaForm').val(),
-                        "Porcentaje": $('#PorcentajeBarForm').val(),
-                        "Fecha": $('#FechaForm').val()
-                    };
-                    console.log(parametro);
-                    $.ajax({
-                        data: parametro,
-                        url: 'Tareas.jsp',
-                        type: 'post',
-                        success: function () {
-                            $('#' + mes($('#FechaForm').val().split("-")[1])).append(
-                                '<li class="list-group-item" role="button" Tarea="'+$('#TareaForm').val()+'">' +
-                                '<div class="row mb-3">' +
-                                '<div class="col-sm-4">' + $('#TareaForm').val() + '</div>' +
-                                '<div class="col-sm-8">' +
-                                '<div class="progress">' +
-                                '<div class="progress-bar progress-bar-striped progress-bar-animated ' + color($('#PorcentajeBarForm').val()) + '" role="progressbar" style="width: ' + $('#PorcentajeBarForm').val() + '%"></div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</li>'
-                            );
-
-                        }
-                    });
-                }
-            });
-        });
-
-        $('[editar]').click(function () {
-            var name = $(this).attr('name');
-            Swal.fire({
-                title: "Editar tarea",
-                html: '' +
-                    '<div class="text-start">' +
-                    '<div class="mb-3">' +
-                    '<label class="form-label">Nombre tarea</label>' +
-                    '<input type="text" class="form-control swal2-input" id="TareaForm" placeholder="Nombre" value="'+$('#Titulo').text()+'">' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label class="form-label">Porcentaje</label>' +
-                    '<div class="row mb-3">' +
-                    '<div class="col-3">' +
-                    '<input type="number" value="'+$('#PorcentajeNum').attr('name')+'" step="5" class="form-control" id="PorcentajeNumForm">' +
-                    '</div>' +
-                    '<div class="col-9">' +
-                    '<input type="range" class="form-range" min="0" max="100" step="5" id="PorcentajeBarForm" value="'+$('#PorcentajeNum').attr('name')+'">' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label class="form-label">Fecha</label>' +
-                    '<input type="date" value="'+$('#Fecha').text()+'" class="form-control swal2-input" id="FechaForm">' +
-                    '</div>' +
-                    '</div>',
-                showCancelButton: true,
-                didOpen: () => {
-                    inputNumber = Swal.getContent().querySelector('#PorcentajeBarForm')
-                    inputRange = Swal.getContent().querySelector('#PorcentajeNumForm')
-
-                    inputNumber.addEventListener('input', () => {
-                        inputRange.value = inputNumber.value
-                    })
-
-                    inputRange.addEventListener('change', () => {
-                        inputNumber.value = inputRange.value
-                    })
-                }
-            }).then((result) => {
-                if (result.value) {
-                    var parametro = {
-                        "Nombre": $('#TareaForm').val(),
-                        "Porcentaje": $('#PorcentajeBarForm').val(),
-                        "Fecha": $('#FechaForm').val(),
-                        "Editar": "true"
-                    };
-                    console.log(parametro);
-                    $.ajax({
-                        data: parametro,
-                        url: 'Tareas.jsp',
-                        type: 'post',
-                        success: function () {
-                            $("p[name='" + name + "']").text(result.value);
-                        }
-                    });
-                }
-            });
-        });
-
-        $('[borrar]').click(function () {
-            var name = $(this).attr('name');
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    );
-
-                    var parametro = {"Borrar": name};
-                    $.ajax({
-                        data: parametro,
-                        url: 'Tareas.jsp',
-                        type: 'post',
-                        success: function () {
-                            $('#' + name).remove();
-                        }
-                    });
-                }
-            });
-        });
-    });
-
-    function fechaInput(fecha){
-        fecha = fecha.split("-")[2] +"-"+ fecha.split("-")[1]+"-"+ fecha.split("-")[0];
-        return fecha;
-    }
-
-    function color(porcentaje) {
-        var color;
-        if (porcentaje >= 74) {
-            color = "bg-primary";
-        } else {
-            if (porcentaje >= 50) {
-                color = "bg-success";
-            } else {
-                if (porcentaje >= 25) {
-                    color = "bg-warning";
-                } else {
-                    color = "bg-danger";
-                }
-            }
-        }
-        return color;
-    }
-
-    function mes(fecha) {
-        var mes;
-        switch (fecha) {
-            case "01":
-                mes = "Enero";
-                break;
-            case "02":
-                mes = "Febrero";
-                break;
-            case "03":
-                mes = "Marzo";
-                break;
-            case "04":
-                mes = "Abril";
-                break;
-            case "05":
-                mes = "Mayo";
-                break;
-            case "06":
-                mes = "Junio";
-                break;
-            case "07":
-                mes = "Julio";
-                break;
-            case "08":
-                mes = "Agosto";
-                break;
-            case "09":
-                mes = "Septiembre";
-                break;
-            case "10":
-                mes = "Octubre";
-                break;
-            case "11":
-                mes = "Noviembre";
-                break;
-            case "12":
-                mes = "Diciembre";
-                break;
-        }
-        $("[name='" + mes + "']").css("cssText", "display:block !important");
-        return mes;
-    }
-</script>
-
 </body>
 
 </html>
