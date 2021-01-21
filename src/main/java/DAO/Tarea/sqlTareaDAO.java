@@ -21,9 +21,10 @@ public class sqlTareaDAO implements TareaDAO {
     private final String INSERTAR = "insert into Tarea(cveproyecto, nombre_tarea, fecha_entrega, porcentaje) values(?, ?, ?, ?);";
     private final String BORRAR = "delete from Tarea where cveproyecto = ?;";
     private final String LISTARPORNOMBRE = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
-    private final String LISTAR = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
+    private final String LISTAR = "select * from tarea where cveproyecto = ?;";
     private final String CAMBIAR = "update Tarea set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
-    private final String CONSULTANOMBRE = "select * from Tarea where nombre_tarea = ?";
+    private final String CONSULTANOMBRE = "select * from Tarea where nombre_tarea = ?;";
+    private final String CONSULTARTAREA = "select * from tarea where cveProyecto = ? and nombre_tarea = ? and fecha_entrega = ? and porcentaje = ?;";
 
     public sqlTareaDAO(){
         try{
@@ -110,6 +111,30 @@ public class sqlTareaDAO implements TareaDAO {
         return tarea;
     }
 
+    public Tarea consultarTarea(int cveProyecto, String nombre_tarea, String fecha_entrega, int porcentaje){
+        Tarea tarea = null;
+        try{
+            //  Se prepara el statement y añaden los datos
+            ps = conector.prepareStatement(CONSULTARTAREA);
+            ps.setInt(1, cveProyecto);
+            ps.setString(2, nombre_tarea);
+            ps.setString(3, fecha_entrega);
+            ps.setInt(4, porcentaje);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                tarea = new Tarea(rs.getInt("cveProyecto"), rs.getString("nombre_tarea"), rs.getString("fecha_entrega"), rs.getInt("predecesor"), rs.getInt("porcentaje"));
+            }
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }finally {
+            closeConnections();
+        }
+        return tarea;
+    }
+
     @Override
     public int cambiar(Tarea ob) {
         int cveProyecto = 0;
@@ -159,27 +184,7 @@ public class sqlTareaDAO implements TareaDAO {
             closeConnections();
         }
 
-        return lista;
-    }
-
-    public ArrayList<Tarea> traerTodo() {
-        ArrayList<Tarea> lista = new ArrayList<>();
-
-        try{
-            ps = conector.prepareStatement(LISTAR);
-            ps.execute();
-            rs = ps.getResultSet();
-
-            while (rs.next()){
-                lista.add(new Tarea(rs.getInt("cveProyecto"), rs.getString("nombre_tarea"), rs.getString("fecha_entrega"), rs.getInt("predecesor"), rs.getInt("porcentaje")));
-            }
-        }catch (Exception e){
-            System.out.println(e.toString() + " en traerTodo() - sqlTareaDAO");
-            lista = null;
-        }finally {
-            closeConnections();
-        }
-
+        System.out.println(lista);
         return lista;
     }
 

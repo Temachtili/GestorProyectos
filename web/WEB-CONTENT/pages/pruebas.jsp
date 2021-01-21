@@ -19,13 +19,11 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <%@ page import="DAO.Tarea.sqlTareaDAO" %>
-    <%@ page import="DAO.Tarea.TareaDAO" %>
     <%@ page import="Modelo.Tarea" %>
     <%@ page import="com.google.gson.Gson" %>
     <%@ page import="java.util.*" %>
-    <%@ page import="java.io.PrintWriter" %>
     <%
-        TareaDAO sql = new sqlTareaDAO();
+        sqlTareaDAO sql = new sqlTareaDAO();
         ArrayList<Tarea> arr =  sql.listar(2);
 
         ArrayList<String> name = new ArrayList<>();
@@ -58,8 +56,6 @@
                 }
             });
         });
-
-
     </script>
 
 </head>

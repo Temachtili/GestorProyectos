@@ -1,9 +1,8 @@
-<%@ page import="DAO.Tarea.TareaDAO" %>
 <%@ page import="DAO.Tarea.sqlTareaDAO" %>
-<%@ page import="java.util.List" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="Modelo.Tarea" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <!doctype html>
 <html lang="es">
 
@@ -15,31 +14,91 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+
+    <!--    Archivos js locales    -->
+    <script src="../js/jquery-3.5.1.js"></script>
+    <script src="../js/Tareas.js"></script>
+    <script src="../js/main.js"></script>
+
+
+    <!--    Archivos css locales    -->
+    <link href="../css/jquery-ui.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
-    <script src="../js/jquery-3.5.1.js"></script>
-    <script src="../js/Tareas.js"></script>
+    <!--    Archivos js externos    -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-    <script
-            src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
-            integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
-            crossorigin="anonymous"></script>
 
     <title>Gantt</title>
 
     <%
+        //  Inicio, obtener datos del proyecto seleccionado
         sqlTareaDAO sql = new sqlTareaDAO();
-        List lista = sql.listar(Integer.parseInt(request.getParameter("cveProyecto")));
+        ArrayList<Tarea> lista = sql.listar(Integer.parseInt(request.getParameter("cveProyecto")));
+
+        //  Autocomplete
+        sqlTareaDAO s = new sqlTareaDAO();
+        ArrayList<Tarea> arr =  s.listar(2);
+
+        ArrayList<String> name = new ArrayList<>();
+
+        for (Tarea tarea : arr) { name.add(tarea.getNombreTarea()); }
+
     %>
+
     <script>
+        $(function (){
+
+            var nombres = <%= new Gson().toJson(name) %>;
+
+            $('#Buscar').autocomplete({
+                source: nombres,
+                select: function (event, item){
+                    var params = {
+                        "tarea": item.item.value
+                    }
+
+                    $.get("consultas/cConsultaTR.jsp", params, function(tarea){
+                        $('#Titulo').text(tarea['nombreTarea']);
+                        $('#PorcentajeNum').text(tarea['porcentaje'] + "%");
+                        $('#PorcentajeNum').attr('name',tarea['porcentaje']);
+                        $('#PorcentajeBar').attr('style',"width: " + tarea['porcentaje']+"%");
+                        $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(tarea['porcentaje']));
+                        $('#Fecha').text(tarea['fechaEntrega']);
+
+                        document.getElementById("nombreTarea").value = tarea["nombreTarea"];
+                        document.getElementById("fechaEntrega").value =  tarea["fechaEntrega"];
+                        document.getElementById("progreso").value =  tarea["porcentaje"];
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        let lista = <%=new Gson().toJson(lista)%>;
+
+        function actualizarTarea(element){
+            var numeroTarea = $(element).attr('noTarea');
+            console.log(lista);
+            $('#Titulo').text(lista[numeroTarea]['nombreTarea']);
+            $('#PorcentajeNum').text(lista[numeroTarea]['porcentaje'] + "%");
+            $('#PorcentajeNum').attr('name',lista[numeroTarea]['porcentaje']);
+            $('#PorcentajeBar').attr('style',"width: " + lista[numeroTarea]['porcentaje']+"%");
+            $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
+            $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
+        }
+
         $(function () {
-            let lista = <%=new Gson().toJson(lista)%>;
+
             const ext = <%= lista.size() %>;
+
             for (var i = 0; i < ext; i++) {
                 $('#' + mes(lista[i]['fechaEntrega'].split("-")[1])).append(
-                    '<li class="list-group-item" role="button" Tarea="'+lista[i]['nombreTarea']+'" noTarea="'+lista[i]['predecesor']+'">' +
+                    '<li class="list-group-item" role="button" onclick="actualizarTarea(this)" Tarea="'+lista[i]['nombreTarea']+'" noTarea="'+i+'" predecesor = "'+ lista[i]["predecesor"] +'">' +
                     '<div class="row mb-3">' +
                     '<div class="col-sm-4">' + lista[i]['nombreTarea'] + '</div>' +
                     '<div class="col-sm-8">' +
@@ -75,22 +134,11 @@
                 '<p id="Fecha">'+lista[0]['fechaEntrega']+'</p>' +
                 '</div>' +
                 '<div class="mb-3 d-flex justify-content-center">' +
-                '<button type="button" class="btn btn-primary me-3" editar name="'+lista[0]['nombreTarea'] +'">Editar</button>' +
-                '<button type="button" class="btn btn-danger" borrar name="'+lista[0]['nombreTarea'] +'">Eliminar</button>' +
+                '<button type="button" class="btn btn-primary me-3" editar predecesor = "'+ lista[0]["predecesor"] +'" name="'+lista[0]['nombreTarea'] +'">Editar</button>' +
+                '<button type="button" class="btn btn-danger" borrar predecesor = "'+ lista[0]["predecesor"] +'" name="'+lista[0]['nombreTarea'] +'">Eliminar</button>' +
                 '</div>' +
                 '</div>'
             );
-
-            $('[Tarea]').click(function (){
-                var nombreTarea = $(this).attr('Tarea');
-                var numeroTarea = $(this).attr('noTarea');
-                $('#Titulo').text(lista[numeroTarea]['nombreTarea']);
-                $('#PorcentajeNum').text(lista[numeroTarea]['porcentaje'] + "%");
-                $('#PorcentajeNum').attr('name',lista[numeroTarea]['porcentaje']);
-                $('#PorcentajeBar').attr('style',"width: " + lista[numeroTarea]['porcentaje']+"%");
-                $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
-                $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
-            });
 
             $('[agregar]').click(function () {
                 Swal.fire({
@@ -138,19 +186,9 @@
                             "Porcentaje": $('#PorcentajeBarForm').val(),
                             "Fecha": $('#FechaForm').val()
                         };
-                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function() {
-                            $('#' + mes($('#FechaForm').val().split("-")[1])).append(
-                                '<li class="list-group-item" role="button" Tarea="'+$('#TareaForm').val()+'" noTarea="5">' +
-                                '<div class="row mb-3">' +
-                                '<div class="col-sm-4">' + $('#TareaForm').val() + '</div>' +
-                                '<div class="col-sm-8">' +
-                                '<div class="progress">' +
-                                '<div class="progress-bar progress-bar-striped progress-bar-animated ' + color($('#PorcentajeBarForm').val()) + '" role="progressbar" style="width: ' + $('#PorcentajeBarForm').val() + '%"></div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</li>'
-                            );
+                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function(response) {
+                            location.reload();
+
                         });
                     }
                 });
