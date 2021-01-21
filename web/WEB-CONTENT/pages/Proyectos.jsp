@@ -170,83 +170,12 @@
                             url:   'Proyectos.jsp',
                             type:  'post',
                             success:  function () {
-                                $('#lista-proyectos').append(
-                                    '<li class="list-group-item" id="'+$('#Nombre_Proyecto').val()+'">'+
-                                    '<div class="row">' +
-                                    '<div class="col-10">' +
-                                    '<p name="'+result.value+'">'+result.value +'</p>' +
-                                    '</div>' +
-                                    '<div class="col-1">' +
-                                    '<button type="button" class="btn btn-primary" editar name="'+result.value+'">Editar</button>' +
-                                    '</div>' +
-                                    '<div class="col-1">' +
-                                    '   <button type="button" class="btn btn-danger" borrar name="'+result.value+'">Borrar</button>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</li>');
-                                location.reload();
+                                buscarProyectos("");
                             }
                         });
                     }
                 });
             });
-
-            //  Borrar proyectos
-            /*$('[borrar]').click(function () {
-                var cve = $(this).attr('cve');
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#dd3333',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        );
-
-                        var parametro = {"Borrar" : cve};
-                        $.ajax({
-                            data:  parametro,
-                            url:   'Proyectos.jsp',
-                            type:  'post',
-                            success:  function () {
-                                $('#' + cve).remove();
-                            }
-                        });
-                    }
-                });
-            });*/
-
-            //  Editar proyectos
-            /*$('[editar]').click(function () {
-                var name = $(this).attr('name');
-                var cve = $(this).attr('cve');
-                Swal.fire({
-                    title: "Editar nombre",
-                    input: 'text',
-                    inputValue: name,
-                    inputPlaceholder: 'Nombre del proyecto',
-                    showCancelButton: true
-                }).then((result) => {
-                    if (result.value) {
-                        var parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
-                        $.ajax({
-                            data:  parametro,
-                            url:   'Proyectos.jsp',
-                            type:  'post',
-                            success:  function () {
-                                $("p[name='"+name+"']").text(result.value);
-                            }
-                        });
-                    }
-                });
-            });*/
         });
 
     </script>
