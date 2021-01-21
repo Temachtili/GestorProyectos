@@ -1,10 +1,10 @@
 <%@ page import="DAO.Proyecto.ProyectoDAO" %>
 <%@ page import="DAO.Proyecto.sqlProyectoDAO" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="Modelo.Proyecto" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.TreeMap" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="es">
@@ -27,13 +27,15 @@
 
     <%
         ProyectoDAO p = new sqlProyectoDAO();
+        List lista =  p.listar(1);
+        System.out.println(lista);
 
-        Map<Integer, String> listado = new TreeMap<>();
+        //Map<Integer, String> listado = new TreeMap<>();
 
-        for (Proyecto pro : p.listar(1)){ listado.put(pro.getCveProyecto(), pro.getNombreProyecto()); }
+        //for (Proyecto pro : p.listar(1)){ listado.put(pro.getCveProyecto(), pro.getNombreProyecto()); }
 
-        System.out.println("lista: " + listado);
-        System.out.println("extensión: " + listado.size());
+        //System.out.println("lista: " + listado);
+        //System.out.println("extensión: " + listado.size());
 
         if(request.getParameter("NombreProyecto") != null){
             ProyectoDAO sql = new sqlProyectoDAO();
@@ -42,46 +44,38 @@
 
         if(request.getParameter("Borrar") != null){
             ProyectoDAO sql = new sqlProyectoDAO();
-            sql.eliminar(new Proyecto(request.getParameter("Borrar")));
+            sql.eliminar(new Proyecto(Integer.parseInt(request.getParameter("Borrar"))));
         }
 
         if(request.getParameter("Actualizar") != null){
             ProyectoDAO sql = new sqlProyectoDAO();
-            //sql.cambiar(new Proyecto(request.getParameter("Actualizar")));
+            sql.cambiar(new Proyecto(Integer.parseInt(request.getParameter("cveProyecto")),request.getParameter("Actualizar")));
         }
-
     %>
-
-    <style>
-        .lista:hover{
-            cursor: pointer;
-        }
-    </style>
     
     <script>
-        let lista = <%=new Gson().toJson(listado)%>;
-        const ext = <%= listado.size() %>;
+        let lista = <%=new Gson().toJson(lista)%>;
+        console.log(lista);
+        const ext = <%= lista.size() %>;
 
         $( function (){
-            for (var i = 0; i < ext; i++){
-                console.log("dato " + lista[i+1]);
 
+            for (var i = 0; i < ext; i++){
                 const contenedor = document.getElementById("lista-proyectos");
                 let listaProyectos = `
-                    <li id="`+ lista[i+1] +`" class="list-group-item lista">
+                    <li id="`+ lista[i]['cveProyecto'] +`" class="list-group-item lista" role="button">
                         <div class="row">
                             <div class="col-10">
-                                <p name="`+ lista[i+1] +`">`+ lista[i+1] +`</p>
+                                <p name="`+ lista[i]['nombreProyecto'] +`">`+ lista[i]['nombreProyecto'] +`</p>
                             </div>
                             <div class="col-1">
-                                <button type="button" class="btn btn-primary" editar name="`+ i +`">Editar</button>
+                                <button type="button" class="btn btn-primary" editar cve="`+ lista[i]['cveProyecto'] +`" name="`+ lista[i]['nombreProyecto'] +`">Editar</button>
                             </div>
                             <div class="col-1">
-                                <button type="button" class="btn btn-danger" borrar name="`+ i +`">Borrar</button>
+                                <button type="button" class="btn btn-danger" borrar cve="`+ lista[i]['cveProyecto'] +`">Borrar</button>
                             </div>
                         </div>
                     </li>`;
-
                 contenedor.insertAdjacentHTML("beforeend", listaProyectos);
 
             }
@@ -135,9 +129,7 @@
         crossorigin="anonymous"></script>
 
 <script>
-    var seleccion;
     $(document).ready(function() {
-
         $('#btn_nuevo').click(function () {
             Swal.fire({
                 title: "Crear nuevo proyecto",
@@ -174,14 +166,14 @@
         });
 
         $('[borrar]').click(function () {
-            var name = $(this).attr('name');
+            var cve = $(this).attr('cve');
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
+                cancelButtonColor: '#dd3333',
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -191,13 +183,13 @@
                         'success'
                     );
 
-                    var parametro = {"Borrar" : name};
+                    var parametro = {"Borrar" : cve};
                     $.ajax({
                         data:  parametro,
                         url:   'Proyectos.jsp',
                         type:  'post',
                         success:  function () {
-                            $('#' + name).remove();
+                            $('#' + cve).remove();
                         }
                     });
                 }
@@ -206,6 +198,7 @@
         // Editar
         $('[editar]').click(function () {
             var name = $(this).attr('name');
+            var cve = $(this).attr('cve');
             Swal.fire({
                 title: "Editar nombre",
                 input: 'text',
@@ -214,7 +207,7 @@
                 showCancelButton: true
             }).then((result) => {
                 if (result.value) {
-                    var parametro = {"Actualizar" : result.value};
+                    var parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
                     $.ajax({
                         data:  parametro,
                         url:   'Proyectos.jsp',

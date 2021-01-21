@@ -17,9 +17,9 @@ public class sqlProyectoDAO implements ProyectoDAO {
     private PreparedStatement ps;
     //Query's
     private final String INSERTAR = "insert into Proyecto(nombre_proyecto) values (?);";
-    //private final String BORRAR = "delete from Proyecto where cveProyecto = ?;";
-    private final String BORRAR = "delete from Proyecto where nombre_proyecto = ?;";
+    private final String BORRAR = "delete from Proyecto where cveProyecto = ?;";
     private final String LISTAR = "select * from Proyecto;";
+    private final String MODIFICAR = "update proyecto set nombre_proyecto = ? where cveproyecto = ?;";
 
     public sqlProyectoDAO(){
         try{
@@ -64,8 +64,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
             try {
                 //Se prepara el statement
                 ps = conector.prepareStatement(BORRAR);
-                //ps.setInt(1, ob.getCveProyecto());
-                ps.setString(1, ob.getNombreProyecto());
+                ps.setInt(1, ob.getCveProyecto());
 
                 ps.executeUpdate(); //Se ejecuta el Query
                 System.out.println("Se eliminó el(los) registro(s)");
@@ -82,7 +81,29 @@ public class sqlProyectoDAO implements ProyectoDAO {
     }
 
     public int cambiar(Proyecto ob) {
-        return 0;
+        int cveProyecto = 0;
+
+        if (conector != null){
+            try {
+                //Se prepara el statement
+                ps = conector.prepareStatement(MODIFICAR);
+                ps.setString(1, ob.getNombreProyecto());
+                ps.setInt(2, ob.getCveProyecto());
+
+                ps.executeUpdate(); //Se ejecuta el query
+                System.out.println("Se modifico correctamente el proyecto");
+                cveProyecto = 1;
+
+            }catch (Exception e){
+                System.out.println(e.toString() + " en modificar() - sqlProyectoDAO");
+            }finally {
+                closeConnections();
+            }
+        }else{
+            System.out.println("Fallida conexión a la base de datos en sqlProyectoDAO()");
+        }
+
+        return cveProyecto;
     }
 
     @Override

@@ -21,7 +21,7 @@ public class sqlTareaDAO implements TareaDAO {
     private ResultSet rs;
     private PreparedStatement ps;
     //Query's
-    private final String INSERTAR = "insert into Tarea(cveProyecto, nombretarea, fechaentrega, predecesor, porcentaje) values(?, ?, ?, ?, ?);";
+    private final String INSERTAR = "insert into Tarea(cveproyecto, nombre_tarea, fecha_entrega, predecesor, porcentaje) values(?, ?, ?, ?, ?);";
     private final String BORRAR = "delete from Tarea where cveproyecto = ?;";
     private final String LISTAR = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
     private final String CAMBIAR = "update Tarea set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
@@ -44,7 +44,12 @@ public class sqlTareaDAO implements TareaDAO {
         if (conector != null){
             try {
                 // Se prepara el statement y añaden los datos del objeto
-                incorporarDatos(ob, INSERTAR);
+                ps = conector.prepareStatement(INSERTAR);
+                ps.setInt(1, ob.getCveProyecto());
+                ps.setString(2, ob.getNombreTarea());
+                ps.setString(3, ob.getFechaEntrega());
+                ps.setInt(4, ob.getPredecesor());
+                ps.setInt(5, ob.getPorcentaje());
                 ps.executeUpdate(); // Se ejecuta el query
 
                 System.out.println("Se registró correctamente la tarea");

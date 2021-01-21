@@ -13,6 +13,10 @@ public class Proyecto {
         this.nombreProyecto = nombreProyecto;
     }
 
+    public Proyecto(int cveProyecto) {
+        this.cveProyecto = cveProyecto;
+    }
+
     public Proyecto(String nombreProyecto) {
         this.nombreProyecto = nombreProyecto;
     }
@@ -31,5 +35,13 @@ public class Proyecto {
 
     public void setNombreProyecto(String nombreProyecto) {
         this.nombreProyecto = nombreProyecto;
+    }
+
+    @Override
+    public String toString() {
+        return "Proyecto{" +
+                "cveProyecto=" + cveProyecto +
+                ", nombreProyecto='" + nombreProyecto + '\'' +
+                '}';
     }
 }

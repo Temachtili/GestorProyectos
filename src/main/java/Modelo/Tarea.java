@@ -66,4 +66,15 @@ public class Tarea {
     public void setPorcentaje(int porcentaje) {
         this.porcentaje = porcentaje;
     }
+
+    @Override
+    public String toString() {
+        return "Tarea{" +
+                "cveProyecto=" + cveProyecto +
+                ", nombreTarea='" + nombreTarea + '\'' +
+                ", fechaEntrega='" + fechaEntrega + '\'' +
+                ", predecesor=" + predecesor +
+                ", porcentaje=" + porcentaje +
+                '}';
+    }
 }
