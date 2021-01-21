@@ -1,10 +1,8 @@
-<%@ page import="DAO.Tarea.TareaDAO" %>
 <%@ page import="DAO.Tarea.sqlTareaDAO" %>
-<%@ page import="java.util.List" %>
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="Modelo.Tarea" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <!doctype html>
 <html lang="es">
 
@@ -81,12 +79,26 @@
     </script>
 
     <script>
+        let lista = <%=new Gson().toJson(lista)%>;
+
+        function actualizarTarea(element){
+            var numeroTarea = $(element).attr('noTarea');
+            console.log(lista);
+            $('#Titulo').text(lista[numeroTarea]['nombreTarea']);
+            $('#PorcentajeNum').text(lista[numeroTarea]['porcentaje'] + "%");
+            $('#PorcentajeNum').attr('name',lista[numeroTarea]['porcentaje']);
+            $('#PorcentajeBar').attr('style',"width: " + lista[numeroTarea]['porcentaje']+"%");
+            $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
+            $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
+        }
+
         $(function () {
-            let lista = <%=new Gson().toJson(lista)%>;
+
             const ext = <%= lista.size() %>;
+
             for (var i = 0; i < ext; i++) {
                 $('#' + mes(lista[i]['fechaEntrega'].split("-")[1])).append(
-                    '<li class="list-group-item" role="button" Tarea="'+lista[i]['nombreTarea']+'" noTarea="'+lista[i]['predecesor']+'">' +
+                    '<li class="list-group-item" role="button" onclick="actualizarTarea(this)" Tarea="'+lista[i]['nombreTarea']+'" noTarea="'+i+'" predecesor = "'+ lista[i]["predecesor"] +'">' +
                     '<div class="row mb-3">' +
                     '<div class="col-sm-4">' + lista[i]['nombreTarea'] + '</div>' +
                     '<div class="col-sm-8">' +
@@ -122,22 +134,11 @@
                 '<p id="Fecha">'+lista[0]['fechaEntrega']+'</p>' +
                 '</div>' +
                 '<div class="mb-3 d-flex justify-content-center">' +
-                '<button type="button" class="btn btn-primary me-3" editar name="'+lista[0]['nombreTarea'] +'">Editar</button>' +
-                '<button type="button" class="btn btn-danger" borrar name="'+lista[0]['nombreTarea'] +'">Eliminar</button>' +
+                '<button type="button" class="btn btn-primary me-3" editar predecesor = "'+ lista[0]["predecesor"] +'" name="'+lista[0]['nombreTarea'] +'">Editar</button>' +
+                '<button type="button" class="btn btn-danger" borrar predecesor = "'+ lista[0]["predecesor"] +'" name="'+lista[0]['nombreTarea'] +'">Eliminar</button>' +
                 '</div>' +
                 '</div>'
             );
-
-            $('[Tarea]').click(function (){
-                var nombreTarea = $(this).attr('Tarea');
-                var numeroTarea = $(this).attr('noTarea');
-                $('#Titulo').text(lista[numeroTarea]['nombreTarea']);
-                $('#PorcentajeNum').text(lista[numeroTarea]['porcentaje'] + "%");
-                $('#PorcentajeNum').attr('name',lista[numeroTarea]['porcentaje']);
-                $('#PorcentajeBar').attr('style',"width: " + lista[numeroTarea]['porcentaje']+"%");
-                $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
-                $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
-            });
 
             $('[agregar]').click(function () {
                 Swal.fire({
@@ -185,19 +186,9 @@
                             "Porcentaje": $('#PorcentajeBarForm').val(),
                             "Fecha": $('#FechaForm').val()
                         };
-                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function() {
-                            $('#' + mes($('#FechaForm').val().split("-")[1])).append(
-                                '<li class="list-group-item" role="button" Tarea="'+$('#TareaForm').val()+'" noTarea="5">' +
-                                '<div class="row mb-3">' +
-                                '<div class="col-sm-4">' + $('#TareaForm').val() + '</div>' +
-                                '<div class="col-sm-8">' +
-                                '<div class="progress">' +
-                                '<div class="progress-bar progress-bar-striped progress-bar-animated ' + color($('#PorcentajeBarForm').val()) + '" role="progressbar" style="width: ' + $('#PorcentajeBarForm').val() + '%"></div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '</li>'
-                            );
+                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function(response) {
+                            location.reload();
+
                         });
                     }
                 });

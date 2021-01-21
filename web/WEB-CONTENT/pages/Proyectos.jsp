@@ -47,7 +47,6 @@
             sql.cambiar(new Proyecto(Integer.parseInt(request.getParameter("cveProyecto")),request.getParameter("Actualizar")));
         }
 
-
         /*  Creacion del array para autocompletar el input.text */
         ArrayList<String> name = new ArrayList<>();
         for (Proyecto proyecto : lista) { name.add(proyecto.getNombreProyecto());  }
