@@ -56,8 +56,7 @@
     
     <script>
         //  Consulta proyectos
-
-            $(buscarProyectos(" "));
+            $(buscarProyectos(""));
 
             var nombres = <%= new Gson().toJson(name) %>;
 
@@ -87,7 +86,7 @@
                 if (valor != ""){
                     buscarProyectos(valor);
                 }else{
-                    buscarProyectos(" ");
+                    buscarProyectos("");
                 }
             })
 
@@ -119,8 +118,7 @@
                         url:   'Proyectos.jsp',
                         type:  'post',
                         success:  function () {
-                            $('#' + cve).remove();
-                            document.getElementById("1");
+                            $("[cve='" + cve + "']").remove();
                         }
                     });
                 }
@@ -152,6 +150,11 @@
         }
 
         $(document).ready(function() {
+            $('[role]').click(function (){
+                var id = $(this).attr('id');
+                var nombre = $(this).attr('name');
+                $(location).attr('href','Tareas.jsp?cveProyecto='+id+'&nombreProyecto='+ nombre);
+            });
             //  Agregar proyectos
             $('#btn_nuevo').click(function () {
                 Swal.fire({

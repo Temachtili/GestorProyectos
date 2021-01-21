@@ -30,8 +30,8 @@
     <title>Gantt</title>
 
     <%
-        TareaDAO sql = new sqlTareaDAO();
-        List lista = sql.listar(1);
+        sqlTareaDAO sql = new sqlTareaDAO();
+        List lista = sql.listar(Integer.parseInt(request.getParameter("cveProyecto")));
     %>
     <script>
         $(function () {
@@ -133,6 +133,7 @@
                 }).then((result) => {
                     if (result.value) { //validacion de datos
                         var parametro = {
+                            "cve": <%=request.getParameter("cveProyecto")%>,
                             "Nombre": $('#TareaForm').val(),
                             "Porcentaje": $('#PorcentajeBarForm').val(),
                             "Fecha": $('#FechaForm').val()
@@ -261,7 +262,7 @@
 <div class="container mb-5">
     <div class="row">
         <div class="col-10">
-            <h1 class="display-4">Nombre del proyecto</h1>
+            <h1 class="display-4"><%=request.getParameter("nombreProyecto")%></h1>
         </div>
         <div class="col-2 d-flex align-items-center">
             <button type="button" class="btn btn-success me-3" agregar>

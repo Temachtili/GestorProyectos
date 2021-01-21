@@ -11,6 +11,6 @@
 <%
     if(request.getParameter("Nombre") != null){
         TareaDAO nuevaTarea = new sqlTareaDAO();
-        nuevaTarea.insertar(new Tarea(1,request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("Porcentaje"))));
+        nuevaTarea.insertar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("Porcentaje"))));
     }
 %>
