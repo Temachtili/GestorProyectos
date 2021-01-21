@@ -18,7 +18,7 @@
         StringBuilder consulta = new StringBuilder();
         PrintWriter outt = response.getWriter();
         for(Proyecto value: proyecto){
-             consulta.append(" <li id=\"").append(value.getNombreProyecto()).append("\" class=\"list-group-item lista\" role=\"button\">\n")
+             consulta.append(" <li id=\"").append(value.getNombreProyecto()).append("\" class=\"list-group-item lista\" role=\"button\" cve=\"").append(value.getCveProyecto()).append("\">\n")
                      .append("                        <div class=\"row\">\n")
                      .append("                            <div class=\"col-10\">\n")
                      .append("                                <p name=\"").append(value.getNombreProyecto()).append("\">").append(value.getNombreProyecto()).append("</p>\n")
