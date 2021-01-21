@@ -2,6 +2,7 @@ package DAO.Proyecto;
 
 import Base.Conexion;
 import Modelo.Proyecto;
+import Modelo.Tarea;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
     private final String BORRAR = "delete from Proyecto where cveProyecto = ?;";
     private final String LISTAR = "select * from Proyecto;";
     private final String MODIFICAR = "update proyecto set nombre_proyecto = ? where cveproyecto = ?;";
+    private final String CONSULTANOMBRE = "select * from Proyecto where nombre_proyecto like concat('%', ?, '%')";
 
     public sqlProyectoDAO(){
         try{
@@ -106,8 +108,30 @@ public class sqlProyectoDAO implements ProyectoDAO {
         return cveProyecto;
     }
 
-    @Override
-    public ArrayList<Proyecto> listar(int id) {
+    public ArrayList<Proyecto> listar(String nombreProyecto) {
+        ArrayList<Proyecto> lista = new ArrayList<>();
+
+        try{
+            ps = conector.prepareStatement(CONSULTANOMBRE);
+            ps.setString(1, nombreProyecto);
+            ps.execute();
+            rs = ps.getResultSet();
+
+            while (rs.next()){
+                lista.add(new Proyecto(rs.getInt("cveProyecto"), rs.getString("nombre_proyecto")));
+            }
+
+        }catch (Exception e){
+            System.out.println(e.toString() + " en listar() - sqlProyectoDAO");
+            lista = null;
+        }finally {
+            closeConnections();
+        }
+
+        return lista;
+    }
+
+    public ArrayList<Proyecto> traerTodo(){
         ArrayList<Proyecto> lista = new ArrayList<>();
 
         try{
@@ -128,6 +152,27 @@ public class sqlProyectoDAO implements ProyectoDAO {
         }
 
         return lista;
+    }
+
+    public Proyecto consultarProyecto(String nombreTarea) {
+        Proyecto proyecto = null;
+        try{
+            //  Se prepara el statement y añaden los datos
+            ps = conector.prepareStatement(CONSULTANOMBRE);
+            ps.setString(1, nombreTarea);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                proyecto = new Proyecto(rs.getInt("cveProyecto"), rs.getString("nombre_tarea"));
+            }
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }finally {
+            closeConnections();
+        }
+        return proyecto;
     }
 
     @Override

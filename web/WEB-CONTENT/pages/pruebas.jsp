@@ -13,61 +13,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="../css/jquery-ui.css" rel="stylesheet"/>
 
-    <script src="../js/jquery-3.5.1.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <%@ page import="DAO.Tarea.sqlTareaDAO" %>
     <%@ page import="DAO.Tarea.TareaDAO" %>
-    <%@ page import="java.util.ArrayList" %>
     <%@ page import="Modelo.Tarea" %>
     <%@ page import="com.google.gson.Gson" %>
-    <%@ page import="java.util.Map" %>
-    <%@ page import="java.util.HashMap" %>
-    <%@ page import="com.google.gson.JsonArray" %>
+    <%@ page import="java.util.*" %>
+    <%@ page import="java.io.PrintWriter" %>
     <%
         TareaDAO sql = new sqlTareaDAO();
         ArrayList<Tarea> arr =  sql.listar(2);
 
-        ArrayList<String> nombresTareas = new ArrayList<>();
-        Map<String, String> nombres = new HashMap<>();
+        ArrayList<String> name = new ArrayList<>();
 
-        Gson gson = new Gson();
+        for (Tarea tarea : arr) { name.add(tarea.getNombreTarea()); }
 
-        for (Tarea tarea : arr) {
-            nombres.put("nombreTarea", tarea.getNombreTarea());
-            nombres.put("fechaEntrega", tarea.getFechaEntrega());
-            nombres.put("porcentaje", tarea.getPorcentaje() + "");
-        }
-
-        System.out.println(nombres);
-        System.out.println(gson.toJson(nombres));
     %>
 
     <script>
+        $(function (){
 
-        $( function (){
-
-            var nombres = <%= new Gson().toJson(nombres) %>;
+            var nombres = <%= new Gson().toJson(name) %>;
             console.log(nombres);
-            console.log('nombres');
 
-            document.getElementById("#Buscar").autocomplete({
+            $('#Buscar').autocomplete({
                 source: nombres,
                 select: function (event, item){
                     var params = {
-                        tarea: item.item.value
+                        "tarea": item.item.value
                     }
 
-                    $.get("consultas/cConsultaTR.jsp", params, function (response){
-                        var json = JSON.parse(response);
+                    $.get("consultas/cConsultaTR.jsp", params, function(tarea){
+                        console.log("tarea: " + tarea);
+                        console.log(tarea["nombreTarea"]);
 
-                        document.getElementById("nombreTarea").value = json[0]['nombreTarea'];
-                        document.getElementById("fechaEntrega").value =  json[0]['fechaEntrega'];
-                        document.getElementById("progreso").value =  json[0]["progreso"];
-                    })
+                        document.getElementById("nombreTarea").value = tarea["nombreTarea"];
+                        document.getElementById("fechaEntrega").value =  tarea["fechaEntrega"];
+                        document.getElementById("progreso").value =  tarea["porcentaje"];
+                    });
                 }
             });
-
         });
 
 
@@ -77,7 +66,7 @@
 
 <body>
 
-    <input type="text" id="Buscar" placeholder="busca una tarea">
+    <input type="text" id="Buscar" autocomplete="on" placeholder="busca una tarea">
     <input type="text" for="" id="nombreTarea">
     <input type="text" for="" id="fechaEntrega">
     <input type="text" for="" id="progreso">

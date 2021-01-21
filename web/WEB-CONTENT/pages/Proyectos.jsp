@@ -5,6 +5,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.TreeMap" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="es">
@@ -19,23 +20,21 @@
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
-    <script src="../js/jquery-3.5.1.js"></script>
+
+    <link href="../css/jquery-ui.css" rel="stylesheet"/>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <script src="../js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <title>Gantt</title>
 
     <%
-        ProyectoDAO p = new sqlProyectoDAO();
-        List lista =  p.listar(1);
-        System.out.println(lista);
-
-        //Map<Integer, String> listado = new TreeMap<>();
-
-        //for (Proyecto pro : p.listar(1)){ listado.put(pro.getCveProyecto(), pro.getNombreProyecto()); }
-
-        //System.out.println("lista: " + listado);
-        //System.out.println("extensión: " + listado.size());
+        sqlProyectoDAO p = new sqlProyectoDAO();
+        ArrayList<Proyecto> lista =  p.traerTodo();
+        System.out.println("lista " + lista);
 
         if(request.getParameter("NombreProyecto") != null){
             ProyectoDAO sql = new sqlProyectoDAO();
@@ -51,18 +50,24 @@
             ProyectoDAO sql = new sqlProyectoDAO();
             sql.cambiar(new Proyecto(Integer.parseInt(request.getParameter("cveProyecto")),request.getParameter("Actualizar")));
         }
+
+
+        /*  Creacion del array para autocompletar el input.text */
+        ArrayList<String> name = new ArrayList<>();
+        for (Proyecto proyecto : lista) { name.add(proyecto.getNombreProyecto());  }
+        System.out.println("nombres: " + name);
+
     %>
     
     <script>
         let lista = <%=new Gson().toJson(lista)%>;
-        console.log(lista);
         const ext = <%= lista.size() %>;
+        let listaProyectos;
 
         $( function (){
-
             for (var i = 0; i < ext; i++){
                 const contenedor = document.getElementById("lista-proyectos");
-                let listaProyectos = `
+                 listaProyectos = `
                     <li id="`+ lista[i]['cveProyecto'] +`" class="list-group-item lista" role="button">
                         <div class="row">
                             <div class="col-10">
@@ -80,6 +85,44 @@
 
             }
         });
+
+        //  Consulta proyectos
+        $(function (){
+
+            var nombres = <%= new Gson().toJson(name) %>;
+
+            function buscarProyectos(proyectos){
+
+                var params = {
+                    "proyectos": proyectos
+                }
+
+                $.get("consultas/cConsultaProyecto.jsp", params, function(response) {
+                    $("#lista-proyectos").html(response);
+                });
+            }
+
+            /*$('#Buscar').autocomplete({
+                $.get("consultas/cConsultaProyecto.jsp", params, function(response) {
+                    listaProyectos = `
+                        <li id="`+ proyecto[i]['cveProyecto'] +`" class="list-group-item lista" role="button">
+                            <div class="row">
+                                <div class="col-10">
+                                    <p name="`+ lista[i]['nombreProyecto'] +`">`+ lista[i]['nombreProyecto'] +`</p>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-primary" editar cve="`+ lista[i]['cveProyecto'] +`" name="`+ lista[i]['nombreProyecto'] +`">Editar</button>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-danger" borrar cve="`+ lista[i]['cveProyecto'] +`">Borrar</button>
+                                </div>
+                            </div>
+                        </li>`;
+                    contenedor.insertAdjacentHTML("beforeend", listaProyectos);
+                })
+            });*/
+        });
+
     </script>
 
 </head>
@@ -113,7 +156,7 @@
     </div>
 
     <div class="input-group mb-3">
-        <input type="text" class="form-control" id="Buscar" placeholder="Buscar proyecto">
+        <input type="text" class="form-control" autocomplete="on" id="Buscar" placeholder="Buscar proyecto">
         <button class="btn btn-outline-secondary" type="button" id="btnBuscar"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <div class="card">
@@ -130,6 +173,7 @@
 
 <script>
     $(document).ready(function() {
+        //  Agregar proyectos
         $('#btn_nuevo').click(function () {
             Swal.fire({
                 title: "Crear nuevo proyecto",
@@ -165,6 +209,7 @@
             });
         });
 
+        //  Borrar proyectos
         $('[borrar]').click(function () {
             var cve = $(this).attr('cve');
             Swal.fire({
@@ -195,7 +240,8 @@
                 }
             });
         });
-        // Editar
+
+        //  Editar proyectos
         $('[editar]').click(function () {
             var name = $(this).attr('name');
             var cve = $(this).attr('cve');
@@ -220,6 +266,7 @@
             });
         });
     });
+
 </script>
 
 </body>

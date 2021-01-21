@@ -8,9 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class sqlTareaDAO implements TareaDAO {
 
@@ -23,9 +20,10 @@ public class sqlTareaDAO implements TareaDAO {
     //Query's
     private final String INSERTAR = "insert into Tarea(cveproyecto, nombre_tarea, fecha_entrega, predecesor, porcentaje) values(?, ?, ?, ?, ?);";
     private final String BORRAR = "delete from Tarea where cveproyecto = ?;";
+    private final String LISTARPORNOMBRE = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
     private final String LISTAR = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
     private final String CAMBIAR = "update Tarea set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
-    private final String CONSULTANOMBRE = "select * from Tarea where nombretarea = ?";
+    private final String CONSULTANOMBRE = "select * from Tarea where nombre_tarea = ?";
 
     public sqlTareaDAO(){
         try{
@@ -92,10 +90,8 @@ public class sqlTareaDAO implements TareaDAO {
         return cveProyecto;
     }
 
-    public Map<String, String> consultarTarea(String nombreTarea) {
-        //  Se crea el Map
-        Map<String, String> mapTarea = new HashMap<>();
-
+    public Tarea consultarTarea(String nombreTarea) {
+        Tarea tarea = null;
         try{
             //  Se prepara el statement y añaden los datos
             ps = conector.prepareStatement(CONSULTANOMBRE);
@@ -104,9 +100,7 @@ public class sqlTareaDAO implements TareaDAO {
             rs = ps.executeQuery();
 
             while (rs.next()){
-                mapTarea.put("nombreTarea", rs.getString("nombreTarea"));
-                mapTarea.put("fechaEntrega", rs.getString("fechaEntrega"));
-                mapTarea.put("porcentaje", rs.getInt("porcentaje") + "");
+                tarea = new Tarea(rs.getInt("cveProyecto"), rs.getString("nombre_tarea"), rs.getString("fecha_entrega"), rs.getInt("predecesor"), rs.getInt("porcentaje"));
             }
 
         }catch (Exception exception){
@@ -114,7 +108,7 @@ public class sqlTareaDAO implements TareaDAO {
         }finally {
             closeConnections();
         }
-        return mapTarea;
+        return tarea;
     }
 
     @Override
@@ -147,7 +141,6 @@ public class sqlTareaDAO implements TareaDAO {
         ps.setInt(5, ob.getPorcentaje());
     }
 
-    @Override
     public ArrayList<Tarea> listar(int id) {
         ArrayList<Tarea> lista = new ArrayList<>();
 
@@ -162,6 +155,27 @@ public class sqlTareaDAO implements TareaDAO {
             }
         }catch (Exception e){
             System.out.println(e.toString() + " en listar() - sqlTareaDAO");
+            lista = null;
+        }finally {
+            closeConnections();
+        }
+
+        return lista;
+    }
+
+    public ArrayList<Tarea> traerTodo() {
+        ArrayList<Tarea> lista = new ArrayList<>();
+
+        try{
+            ps = conector.prepareStatement(LISTAR);
+            ps.execute();
+            rs = ps.getResultSet();
+
+            while (rs.next()){
+                lista.add(new Tarea(rs.getInt("cveProyecto"), rs.getString("nombre_tarea"), rs.getString("fecha_entrega"), rs.getInt("predecesor"), rs.getInt("porcentaje")));
+            }
+        }catch (Exception e){
+            System.out.println(e.toString() + " en traerTodo() - sqlTareaDAO");
             lista = null;
         }finally {
             closeConnections();
