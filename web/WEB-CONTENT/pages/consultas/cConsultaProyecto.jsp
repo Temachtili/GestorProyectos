@@ -20,7 +20,7 @@
         for(Proyecto value: proyecto){
              consulta.append(" <li class=\"list-group-item lista\" cve=\"").append(value.getCveProyecto()).append("\">\n")
                      .append("                        <div class=\"row\">\n")
-                     .append("                            <div class=\"col-10\" role=\"button\" id=\"").append(value.getCveProyecto()).append("\" name=\"").append(value.getNombreProyecto()).append("\">\n")
+                     .append("                            <div class=\"col-10\" role=\"button\" onClick= \"tarea(this)\" id=\"").append(value.getCveProyecto()).append("\" name=\"").append(value.getNombreProyecto()).append("\">\n")
                      .append("                                <p name=\"").append(value.getNombreProyecto()).append("\">").append(value.getNombreProyecto()).append("</p>\n")
                      .append("                            </div>\n")
                      .append("                            <div class=\"col-1\">\n")

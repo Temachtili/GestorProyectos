@@ -149,12 +149,14 @@
             });
         }
 
+        function tarea(x){
+            var id = $(x).attr('id');
+            var nombre = $(x).attr('name');
+            $(location).attr('href','Tareas.jsp?cveProyecto='+id+'&nombreProyecto='+ nombre);
+        }
+
         $(document).ready(function() {
-            $('[role]').click(function (){
-                var id = $(this).attr('id');
-                var nombre = $(this).attr('name');
-                $(location).attr('href','Tareas.jsp?cveProyecto='+id+'&nombreProyecto='+ nombre);
-            });
+
             //  Agregar proyectos
             $('#btn_nuevo').click(function () {
                 Swal.fire({
