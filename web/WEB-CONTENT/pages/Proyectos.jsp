@@ -24,6 +24,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <script src="../js/main.js"></script>
+    <script src="../js/Proyectos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <title>Gantt</title>
@@ -47,141 +48,11 @@
             sql.cambiar(new Proyecto(Integer.parseInt(request.getParameter("cveProyecto")),request.getParameter("Actualizar")));
         }
 
-
         /*  Creacion del array para autocompletar el input.text */
         ArrayList<String> name = new ArrayList<>();
         for (Proyecto proyecto : lista) { name.add(proyecto.getNombreProyecto());  }
 
     %>
-    
-    <script>
-        //  Consulta proyectos
-            $(buscarProyectos(""));
-
-            var nombres = <%= new Gson().toJson(name) %>;
-
-            function buscarProyectos(proyectos){
-
-                var params = {
-                    "proyectos": proyectos
-                }
-
-                $.ajax({
-                    url: 'consultas/cConsultaProyecto.jsp',
-                    type: 'GET',
-                    dataType: 'html',
-                    data: params
-
-                })
-                .done(function (response){
-                    $("#lista-proyectos").html(response);
-                })
-                .fail(function (){
-                    console.log("error")
-                })
-            }
-
-            $(document).on('keyup', '#Buscar', function (){
-                var valor = $(this).val();
-                if (valor != ""){
-                    buscarProyectos(valor);
-                }else{
-                    buscarProyectos("");
-                }
-            })
-
-    </script>
-
-    <script>
-        function borrar(x){
-            var cve = $(x).attr('cve');
-            console.log(cve);
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#dd3333',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    );
-
-                    var parametro = {"Borrar" : cve};
-                    $.ajax({
-                        data:  parametro,
-                        url:   'Proyectos.jsp',
-                        type:  'post',
-                        success:  function () {
-                            $("[cve='" + cve + "']").remove();
-                        }
-                    });
-                }
-            });
-        }
-
-        function editar(x){
-            var name = $(x).attr('name');
-            var cve = $(x).attr('cve');
-            Swal.fire({
-                title: "Editar nombre",
-                input: 'text',
-                inputValue: name,
-                inputPlaceholder: 'Nombre del proyecto',
-                showCancelButton: true
-            }).then((result) => {
-                if (result.value) {
-                    var parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
-                    $.ajax({
-                        data:  parametro,
-                        url:   'Proyectos.jsp',
-                        type:  'post',
-                        success:  function () {
-                            $("p[name='"+name+"']").text(result.value);
-                        }
-                    });
-                }
-            });
-        }
-
-        function tarea(x){
-            var id = $(x).attr('id');
-            var nombre = $(x).attr('name');
-            $(location).attr('href','Tareas.jsp?cveProyecto='+id+'&nombreProyecto='+ nombre);
-        }
-
-        $(document).ready(function() {
-
-            //  Agregar proyectos
-            $('#btn_nuevo').click(function () {
-                Swal.fire({
-                    title: "Crear nuevo proyecto",
-                    input: 'text',
-                    inputPlaceholder: 'Nombre del proyecto',
-                    showCancelButton: true
-                }).then((result) => {
-                    if (result.value) {
-                        var parametro = {"NombreProyecto" : result.value};
-                        $.ajax({
-                            data:  parametro,
-                            url:   'Proyectos.jsp',
-                            type:  'post',
-                            success:  function () {
-                                buscarProyectos("");
-                            }
-                        });
-                    }
-                });
-            });
-        });
-
-    </script>
-
 </head>
 
 <body>
