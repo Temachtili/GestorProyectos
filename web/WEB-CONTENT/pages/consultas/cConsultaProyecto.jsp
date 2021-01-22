@@ -55,10 +55,10 @@
             .append("                                <p name=\"").append(value.getNombreProyecto()).append("\">").append(value.getNombreProyecto()).append("</p>\n")
             .append("                            </div>\n")
             .append("                            <div class=\"col-1\">\n")
-            .append("                                <button type=\"button\" class=\"btn btn-primary\" editar onClick= \"editar(this)\" cve=\"").append(value.getCveProyecto()).append("\" name=\"").append(value.getNombreProyecto()).append("\">Editar</button>\n")
+            .append("                                <button type=\"button\" class=\"btn btn-primary\" onClick= \"editar(this)\" cve=\"").append(value.getCveProyecto()).append("\" name=\"").append(value.getNombreProyecto()).append("\">Editar</button>\n")
             .append("                            </div>\n")
             .append("                            <div class=\"col-1\">\n")
-            .append("                                <button type=\"button\" class=\"btn btn-danger\" borrar onClick= \"borrar(this)\" cve=\"").append(value.getCveProyecto()).append("\">Borrar</button>\n")
+            .append("                                <button type=\"button\" class=\"btn btn-danger\" onClick= \"borrar(this)\" cve=\"").append(value.getCveProyecto()).append("\">Borrar</button>\n")
             .append("                            </div>\n")
             .append("                        </div>\n")
             .append("                    </li>");

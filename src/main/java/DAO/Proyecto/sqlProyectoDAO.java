@@ -43,7 +43,6 @@ public class sqlProyectoDAO implements ProyectoDAO {
                 ps.setString(1, ob.getNombreProyecto());
 
                 ps.executeUpdate(); //Se ejecuta el query
-                System.out.println("Se registró correctamente la tarea");
                 cveProyecto = 1;
 
             }catch (Exception e){
@@ -69,7 +68,6 @@ public class sqlProyectoDAO implements ProyectoDAO {
                 ps.setInt(1, ob.getCveProyecto());
 
                 ps.executeUpdate(); //Se ejecuta el Query
-                System.out.println("Se eliminó el(los) registro(s)");
                 cveProyecto = 1;
 
             }catch (Exception e){
@@ -93,7 +91,6 @@ public class sqlProyectoDAO implements ProyectoDAO {
                 ps.setInt(2, ob.getCveProyecto());
 
                 ps.executeUpdate(); //Se ejecuta el query
-                System.out.println("Se modifico correctamente el proyecto");
                 cveProyecto = 1;
 
             }catch (Exception e){
@@ -114,29 +111,6 @@ public class sqlProyectoDAO implements ProyectoDAO {
         try{
             ps = conector.prepareStatement(CONSULTANOMBRE);
             ps.setString(1, nombreProyecto);
-            ps.execute();
-            rs = ps.getResultSet();
-
-            while (rs.next()){
-                lista.add(new Proyecto(rs.getInt("cveProyecto"), rs.getString("nombre_proyecto")));
-            }
-
-        }catch (Exception e){
-            System.out.println(e.toString() + " en listar() - sqlProyectoDAO");
-            lista = null;
-        }finally {
-            closeConnections();
-        }
-
-        return lista;
-    }
-
-    public ArrayList<Proyecto> traerTodo(){
-        ArrayList<Proyecto> lista = new ArrayList<>();
-
-        try{
-            ps = conector.prepareStatement(LISTAR);
-
             ps.execute();
             rs = ps.getResultSet();
 

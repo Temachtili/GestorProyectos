@@ -71,7 +71,6 @@ let nombres;
 function actualizarTarea(element){
     var numeroTarea = $(element).attr('noTarea');
     var pre = $(element).attr('predecesor');
-    console.log(lista);
     $('#Titulo').text(lista[numeroTarea]['nombreTarea']);
     $('#PorcentajeNum').text(lista[numeroTarea]['porcentaje'] + "%");
     $('#PorcentajeNum').attr('name',lista[numeroTarea]['porcentaje']);

@@ -1,7 +1,3 @@
-<%@ page import="DAO.Tarea.sqlTareaDAO" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="Modelo.Tarea" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <!doctype html>
 <html lang="es">
@@ -58,7 +54,7 @@
             <h1 class="display-4"><%=request.getParameter("nombreProyecto")%></h1>
         </div>
         <div class="col-2 d-flex align-items-center">
-            <button type="button" onclick="agregar()" class="btn btn-success me-3" agregar>
+            <button type="button" onclick="agregar()" class="btn btn-success me-3">
                 Nueva tarea
             </button>
         </div>
@@ -69,9 +65,7 @@
                                                                                   aria-hidden="true"></i></button>
     </div>
 
-    <div class="card" id="TareaActual">
-
-    </div>
+    <div class="card" id="TareaActual"></div>
 
     <br>
 
@@ -207,8 +201,6 @@
                 </ul>
             </div>
         </div>
-
-
     </div>
 </div>
 
