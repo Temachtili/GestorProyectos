@@ -82,6 +82,60 @@ function actualizarTarea(element){
     $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
 }
 
+function agregar(){
+    var cve = $('[setcve]').attr('setcve');
+    Swal.fire({
+        title: "Crear nueva tarea",
+        html: '' +
+            '<div class="text-start">' +
+            '<div class="mb-3">' +
+            '<label class="form-label">Nombre tarea</label>' +
+            '<input type="text" class="form-control swal2-input" id="TareaForm" placeholder="Nombre">' +
+            '</div>' +
+            '<div class="mb-3">' +
+            '<label class="form-label">Porcentaje</label>' +
+            '<div class="row mb-3">' +
+            '<div class="col-3">' +
+            '<input type="number" value="80" step="5" class="form-control" id="PorcentajeNumForm">' +
+            '</div>' +
+            '<div class="col-9">' +
+            '<input type="range" class="form-range" min="0" max="100" step="5" id="PorcentajeBarForm" value="80">' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="mb-3">' +
+            '<label class="form-label">Fecha</label>' +
+            '<input type="date" class="form-control swal2-input" id="FechaForm">' +
+            '</div>' +
+            '</div>',
+        showCancelButton: true,
+        didOpen: () => {
+            inputNumber = Swal.getContent().querySelector('#PorcentajeBarForm')
+            inputRange = Swal.getContent().querySelector('#PorcentajeNumForm')
+
+            inputNumber.addEventListener('input', () => {
+                inputRange.value = inputNumber.value
+            })
+
+            inputRange.addEventListener('change', () => {
+                inputNumber.value = inputRange.value
+            })
+        }
+    }).then((result) => {
+        if (result.value) { //validacion de datos
+            var parametro = {
+                "cve": cve,
+                "Nombre": $('#TareaForm').val(),
+                "Porcentaje": $('#PorcentajeBarForm').val(),
+                "Fecha": $('#FechaForm').val()
+            };
+            $.post("consultas/cConsultaTarea.jsp",parametro).done(function() {
+                location.reload();
+            });
+        }
+    });
+}
+
 $(function () {
     var cve = $('[setcve]').attr('setcve');
     $.ajax({
@@ -121,7 +175,6 @@ $(function () {
         });
 
     const ext = lista.length;
-    var cve = lista[0]["cveProyecto"];
 
     for (var i = 0; i < ext; i++) {
         $('#' + mes(lista[i]['fechaEntrega'].split("-")[1])).append(
@@ -166,58 +219,6 @@ $(function () {
         '</div>'
     );
 
-    $('[agregar]').click(function () {
-        Swal.fire({
-            title: "Crear nueva tarea",
-            html: '' +
-                '<div class="text-start">' +
-                '<div class="mb-3">' +
-                '<label class="form-label">Nombre tarea</label>' +
-                '<input type="text" class="form-control swal2-input" id="TareaForm" placeholder="Nombre">' +
-                '</div>' +
-                '<div class="mb-3">' +
-                '<label class="form-label">Porcentaje</label>' +
-                '<div class="row mb-3">' +
-                '<div class="col-3">' +
-                '<input type="number" value="80" step="5" class="form-control" id="PorcentajeNumForm">' +
-                '</div>' +
-                '<div class="col-9">' +
-                '<input type="range" class="form-range" min="0" max="100" step="5" id="PorcentajeBarForm" value="80">' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '<div class="mb-3">' +
-                '<label class="form-label">Fecha</label>' +
-                '<input type="date" class="form-control swal2-input" id="FechaForm">' +
-                '</div>' +
-                '</div>',
-            showCancelButton: true,
-            didOpen: () => {
-                inputNumber = Swal.getContent().querySelector('#PorcentajeBarForm')
-                inputRange = Swal.getContent().querySelector('#PorcentajeNumForm')
-
-                inputNumber.addEventListener('input', () => {
-                    inputRange.value = inputNumber.value
-                })
-
-                inputRange.addEventListener('change', () => {
-                    inputNumber.value = inputRange.value
-                })
-            }
-        }).then((result) => {
-            if (result.value) { //validacion de datos
-                var parametro = {
-                    "cve": cve,
-                    "Nombre": $('#TareaForm').val(),
-                    "Porcentaje": $('#PorcentajeBarForm').val(),
-                    "Fecha": $('#FechaForm').val()
-                };
-                $.post("consultas/cConsultaTarea.jsp",parametro).done(function() {
-                    location.reload();
-                });
-            }
-        });
-    });
 
     $('[editar]').click(function () {
         Swal.fire({

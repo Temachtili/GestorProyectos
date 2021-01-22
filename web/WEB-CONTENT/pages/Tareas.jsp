@@ -58,7 +58,7 @@
             <h1 class="display-4"><%=request.getParameter("nombreProyecto")%></h1>
         </div>
         <div class="col-2 d-flex align-items-center">
-            <button type="button" class="btn btn-success me-3" agregar>
+            <button type="button" onclick="agregar()" class="btn btn-success me-3" agregar>
                 Nueva tarea
             </button>
         </div>
