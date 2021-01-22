@@ -19,7 +19,6 @@
     <!--    Archivos js locales    -->
     <script src="../js/jquery-3.5.1.js"></script>
     <script src="../js/Tareas.js"></script>
-    <script src="../js/main.js"></script>
 
 
     <!--    Archivos css locales    -->

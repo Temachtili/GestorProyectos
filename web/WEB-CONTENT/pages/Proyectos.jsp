@@ -10,16 +10,20 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="../css/normalize.css">
-    <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
+    <!--    Archivos css locales    -->
+    <link rel="stylesheet" type="text/css" href="../css/normalize.css">
     <link href="../css/jquery-ui.css" rel="stylesheet"/>
 
+    <!--    Archivos css externos   -->
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <!--    Archivos js locales -->
+    <script src="../js/Proyectos.js"></script>
+
+    <!--    Archivos js externos    -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <script src="../js/main.js"></script>
-    <script src="../js/Proyectos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <title>Gantt</title>
