@@ -13,7 +13,6 @@ function buscarProyectos(proyectos){
         type: 'GET',
         dataType: 'html',
         data: params
-
     })
         .done(function (response){
             $("#lista-proyectos").html(response);

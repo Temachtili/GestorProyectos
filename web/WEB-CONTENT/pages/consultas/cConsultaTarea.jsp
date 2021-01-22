@@ -1,8 +1,6 @@
 <%@ page import="DAO.Tarea.TareaDAO" %>
 <%@ page import="DAO.Tarea.sqlTareaDAO" %>
-<%@ page import="Modelo.Tarea" %>
-<%@ page import="java.io.PrintWriter" %>
-<%@ page import="com.google.gson.Gson" %><%--
+<%@ page import="Modelo.Tarea" %><%--
   Created by IntelliJ IDEA.
   User: yayis
   Date: 21/01/2021
