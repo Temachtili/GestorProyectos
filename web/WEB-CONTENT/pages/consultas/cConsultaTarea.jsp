@@ -11,7 +11,7 @@
 --%>
 <%@ page contentType="text/html; ISO-8859-1; charset=UTF-8"%>
 <%
-    if(request.getParameter("Nombre") != null){
+    if(request.getParameter("Nombre") != null && request.getParameter("Editar") == null){
         TareaDAO nuevaTarea = new sqlTareaDAO();
         nuevaTarea.insertar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("Porcentaje"))));
     }
@@ -23,6 +23,6 @@
 
     if(request.getParameter("Editar") != null){
         TareaDAO nuevaTarea = new sqlTareaDAO();
-        nuevaTarea.cambiar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("predecesor")),Integer.parseInt(request.getParameter("Porcentaje"))));
+        nuevaTarea.cambiar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre2"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("predecesor")),Integer.parseInt(request.getParameter("Porcentaje"))));
     }
 %>

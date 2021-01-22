@@ -20,9 +20,8 @@ public class sqlTareaDAO implements TareaDAO {
     //Query's
     private final String INSERTAR = "insert into Tarea(cveproyecto, nombre_tarea, fecha_entrega, porcentaje) values(?, ?, ?, ?);";
     private final String BORRAR = "delete from Tarea where cveproyecto = ? and predecesor = ?;";
-    private final String LISTARPORNOMBRE = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
     private final String LISTAR = "select * from tarea where cveproyecto = ?;";
-    private final String CAMBIAR = "update Tarea set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
+    private final String CAMBIAR = "update Tarea set nombre_tarea = ?, fecha_entrega = ?, porcentaje = ? where cveproyecto = ? and predecesor = ?;";
     private final String CONSULTANOMBRE = "select * from Tarea where nombre_tarea = ?;";
     private final String CONSULTARTAREA = "select * from tarea where cveProyecto = ? and nombre_tarea = ? and fecha_entrega = ? and porcentaje = ?;";
 
@@ -161,9 +160,9 @@ public class sqlTareaDAO implements TareaDAO {
         ps = conector.prepareStatement(query);
         ps.setString(1, ob.getNombreTarea());
         ps.setString(2, ob.getFechaEntrega());
-        ps.setInt(3, ob.getPredecesor());
-        ps.setInt(4, ob.getPorcentaje());
-        ps.setInt(5, ob.getCveProyecto());
+        ps.setInt(3, ob.getPorcentaje());
+        ps.setInt(4, ob.getCveProyecto());
+        ps.setInt(5, ob.getPredecesor());
     }
 
     public ArrayList<Tarea> listar(int id) {

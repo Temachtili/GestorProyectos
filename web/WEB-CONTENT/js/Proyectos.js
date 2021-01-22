@@ -104,7 +104,7 @@ $(document).ready(function() {
         }).then((result) => {
             if (result.value) {
                 var parametro = {"NombreProyecto" : result.value};
-                $.post( "consultas/cConsultaProyecto.jsp",parametro).done(function() {
+                $.post("consultas/cConsultaProyecto.jsp",parametro).done(function() {
                     buscarProyectos("");
                 });
             }

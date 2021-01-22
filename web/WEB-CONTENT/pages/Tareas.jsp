@@ -183,7 +183,7 @@
                             "Porcentaje": $('#PorcentajeBarForm').val(),
                             "Fecha": $('#FechaForm').val()
                         };
-                        $.post( "consultas/cConsultaTarea.jsp",parametro).done(function() {
+                        $.post("consultas/cConsultaTarea.jsp",parametro).done(function() {
                             location.reload();
                         });
                     }
@@ -191,7 +191,6 @@
             });
 
             $('[editar]').click(function () {
-                var name = $(this).attr('name');
                 Swal.fire({
                     title: "Editar tarea",
                     html: '' +
@@ -232,14 +231,14 @@
                 }).then((result) => {
                     if (result.value) {
                         var parametro = {
-                            "Nombre": $('#TareaForm').val(),
+                            "Nombre2": $('#TareaForm').val(),
                             "Porcentaje": $('#PorcentajeBarForm').val(),
                             "Fecha": $('#FechaForm').val(),
                             "cve" : <%=request.getParameter("cveProyecto")%>,
                             "predecesor" : $(this).attr('predecesor'),
                             "Editar": "true"
                         };
-                        $.post( "consultas/cConsultaTarea.jsp",parametro).done(function() {
+                        $.post("consultas/cConsultaTarea.jsp",parametro).done(function() {
                             location.reload();
                         });
                     }
@@ -268,7 +267,7 @@
                             "predecesor" : $(this).attr('predecesor'),
                             "Borrar" : true
                         };
-                        $.post( "consultas/cConsultaTarea.jsp",parametro).done(function() {
+                        $.post("consultas/cConsultaTarea.jsp",parametro).done(function() {
                             //$('#' + name).remove();
                             location.reload();
                         });
