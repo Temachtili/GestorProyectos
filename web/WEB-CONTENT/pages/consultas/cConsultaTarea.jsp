@@ -16,12 +16,12 @@
         nuevaTarea.insertar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("Porcentaje"))));
     }
 
-    if(request.getParameter("Borrar") != "true"){
+    if(request.getParameter("Borrar") != null){
         TareaDAO nuevaTarea = new sqlTareaDAO();
         nuevaTarea.eliminar(new Tarea(Integer.parseInt(request.getParameter("cve")),Integer.parseInt(request.getParameter("predecesor"))));
     }
 
-    if(request.getParameter("Editar") != "true"){
+    if(request.getParameter("Editar") != null){
         TareaDAO nuevaTarea = new sqlTareaDAO();
         nuevaTarea.cambiar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("predecesor")),Integer.parseInt(request.getParameter("Porcentaje"))));
     }

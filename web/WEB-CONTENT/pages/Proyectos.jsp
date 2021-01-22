@@ -21,6 +21,7 @@
     <!--    Archivos js locales -->
     <script src="../js/jquery-3.5.1.js"></script>
     <script src="../js/Proyectos.js"></script>
+    <script src="../js/jquery-ui.js"></script>
 
 
     <!--    Archivos js externos    -->
