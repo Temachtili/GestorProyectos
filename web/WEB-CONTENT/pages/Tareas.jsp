@@ -27,7 +27,6 @@
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
     <!--    Archivos js externos    -->
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
@@ -78,12 +77,15 @@
 
         function actualizarTarea(element){
             var numeroTarea = $(element).attr('noTarea');
+            var pre = $(element).attr('predecesor');
             console.log(lista);
             $('#Titulo').text(lista[numeroTarea]['nombreTarea']);
             $('#PorcentajeNum').text(lista[numeroTarea]['porcentaje'] + "%");
             $('#PorcentajeNum').attr('name',lista[numeroTarea]['porcentaje']);
             $('#PorcentajeBar').attr('style',"width: " + lista[numeroTarea]['porcentaje']+"%");
             $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
+            $('[borrar]').attr('predecesor',pre);
+            $('[editar]').attr('predecesor',pre);
             $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
         }
 
@@ -93,7 +95,7 @@
 
             for (var i = 0; i < ext; i++) {
                 $('#' + mes(lista[i]['fechaEntrega'].split("-")[1])).append(
-                    '<li class="list-group-item" role="button" onclick="actualizarTarea(this)" Tarea="'+lista[i]['nombreTarea']+'" noTarea="'+i+'" predecesor = "'+ lista[i]["predecesor"] +'">' +
+                    '<li class="list-group-item" role="button" onclick="actualizarTarea(this)" noTarea="'+i+'" predecesor = "'+ lista[i]["predecesor"] +'">' +
                     '<div class="row mb-3">' +
                     '<div class="col-sm-4">' + lista[i]['nombreTarea'] + '</div>' +
                     '<div class="col-sm-8">' +
@@ -129,8 +131,8 @@
                 '<p id="Fecha">'+lista[0]['fechaEntrega']+'</p>' +
                 '</div>' +
                 '<div class="mb-3 d-flex justify-content-center">' +
-                '<button type="button" class="btn btn-primary me-3" editar predecesor = "'+ lista[0]["predecesor"] +'" name="'+lista[0]['nombreTarea'] +'">Editar</button>' +
-                '<button type="button" class="btn btn-danger" borrar predecesor = "'+ lista[0]["predecesor"] +'" name="'+lista[0]['nombreTarea'] +'">Eliminar</button>' +
+                '<button type="button" class="btn btn-primary me-3" editar predecesor = "'+ lista[0]["predecesor"]+'">Editar</button>' +
+                '<button type="button" class="btn btn-danger" borrar predecesor = "'+ lista[0]["predecesor"] +'">Eliminar</button>' +
                 '</div>' +
                 '</div>'
             );
@@ -183,7 +185,6 @@
                         };
                         $.post( "consultas/cConsultaTarea.jsp",parametro).done(function() {
                             location.reload();
-
                         });
                     }
                 });
@@ -234,17 +235,18 @@
                             "Nombre": $('#TareaForm').val(),
                             "Porcentaje": $('#PorcentajeBarForm').val(),
                             "Fecha": $('#FechaForm').val(),
+                            "cve" : <%=request.getParameter("cveProyecto")%>,
+                            "predecesor" : $(this).attr('predecesor'),
                             "Editar": "true"
                         };
-                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function() {
-                            $("p[name='" + name + "']").text(result.value);
+                        $.post( "consultas/cConsultaTarea.jsp",parametro).done(function() {
+                            location.reload();
                         });
                     }
                 });
             });
 
             $('[borrar]').click(function () {
-                var name = $(this).attr('name');
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -261,9 +263,14 @@
                             'success'
                         );
 
-                        var parametro = {"Borrar": name};
-                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function() {
-                            $('#' + name).remove();
+                        var parametro = {
+                            "cve": <%=request.getParameter("cveProyecto")%>,
+                            "predecesor" : $(this).attr('predecesor'),
+                            "Borrar" : true
+                        };
+                        $.post( "consultas/cConsultaTarea.jsp",parametro).done(function() {
+                            //$('#' + name).remove();
+                            location.reload();
                         });
 
 
@@ -277,7 +284,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
     <div class="container-fluid container">
-        <a class="navbar-brand" href="#">Organizador de tareas</a>
+        <a class="navbar-brand" href="Proyectos.jsp">Organizador de tareas</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -286,7 +293,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#"> Mis proyectos</a>
+                    <a class="nav-link active" href="Proyectos.jsp"> Mis proyectos</a>
                 </li>
             </ul>
         </div>

@@ -34,6 +34,11 @@ public class Tarea {
         this.porcentaje = porcentaje;
     }
 
+    public Tarea(int cveProyecto, int predecesor) {
+        this.cveProyecto = cveProyecto;
+        this.predecesor = predecesor;
+    }
+
     public int getCveProyecto() {
         return cveProyecto;
     }

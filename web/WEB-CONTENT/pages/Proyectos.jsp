@@ -19,10 +19,11 @@
     <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 
     <!--    Archivos js locales -->
+    <script src="../js/jquery-3.5.1.js"></script>
     <script src="../js/Proyectos.js"></script>
 
+
     <!--    Archivos js externos    -->
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
@@ -32,7 +33,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
     <div class="container-fluid container">
-        <a class="navbar-brand" href="#">Organizador de tareas</a>
+        <a class="navbar-brand" href="Proyectos.jsp">Organizador de tareas</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -41,7 +42,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#"> Mis proyectos</a>
+                    <a class="nav-link active" href="Proyectos.jsp"> Mis proyectos</a>
                 </li>
             </ul>
         </div>

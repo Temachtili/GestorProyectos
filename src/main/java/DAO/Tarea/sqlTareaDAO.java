@@ -19,7 +19,7 @@ public class sqlTareaDAO implements TareaDAO {
     private PreparedStatement ps;
     //Query's
     private final String INSERTAR = "insert into Tarea(cveproyecto, nombre_tarea, fecha_entrega, porcentaje) values(?, ?, ?, ?);";
-    private final String BORRAR = "delete from Tarea where cveproyecto = ?;";
+    private final String BORRAR = "delete from Tarea where cveproyecto = ? and predecesor = ?;";
     private final String LISTARPORNOMBRE = "select * from proyecto inner join tarea t on proyecto.cveproyecto = t.cveproyecto where t.cveproyecto = ?;";
     private final String LISTAR = "select * from tarea where cveproyecto = ?;";
     private final String CAMBIAR = "update Tarea set nombretarea = ?, fechaentrega = ?, predecesor = ?, porcentaje = ? where cveProyecto = ?;";
@@ -75,6 +75,7 @@ public class sqlTareaDAO implements TareaDAO {
                 //Se prepara el statement
                 ps = conector.prepareStatement(BORRAR);
                 ps.setInt(1, ob.getCveProyecto());
+                ps.setInt(2, ob.getPredecesor());
 
                 ps.executeUpdate(); //Se ejecuta el Query
                 System.out.println("Se eliminó el(los) registro(s)");
@@ -158,11 +159,11 @@ public class sqlTareaDAO implements TareaDAO {
 
     private void incorporarDatos(Tarea ob, String query) throws SQLException {
         ps = conector.prepareStatement(query);
-        ps.setInt(1, ob.getCveProyecto());
-        ps.setString(2, ob.getNombreTarea());
-        ps.setString(3, ob.getFechaEntrega());
-        ps.setInt(4, ob.getPredecesor());
-        ps.setInt(5, ob.getPorcentaje());
+        ps.setString(1, ob.getNombreTarea());
+        ps.setString(2, ob.getFechaEntrega());
+        ps.setInt(3, ob.getPredecesor());
+        ps.setInt(4, ob.getPorcentaje());
+        ps.setInt(5, ob.getCveProyecto());
     }
 
     public ArrayList<Tarea> listar(int id) {
