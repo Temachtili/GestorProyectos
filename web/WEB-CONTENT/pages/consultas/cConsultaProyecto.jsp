@@ -1,7 +1,10 @@
 <%@ page import="DAO.Proyecto.sqlProyectoDAO" %>
 <%@ page import="java.io.PrintWriter" %>
-<%@ page import="Modelo.Proyecto"%><%@ page import="java.util.ArrayList"%>
-<%@ page import="DAO.Proyecto.ProyectoDAO" %><%--
+<%@ page import="Modelo.Proyecto"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="DAO.Tarea.sqlTareaDAO" %>
+<%@ page import="DAO.Proyecto.ProyectoDAO" %>
+<%@ page import="Modelo.Tarea" %><%--
 <%--
   Created by IntelliJ IDEA.
   User: Temachtili
@@ -17,6 +20,12 @@
     if(request.getParameter("NombreProyecto") != null){
         ProyectoDAO sql = new sqlProyectoDAO();
         sql.insertar(new Proyecto(request.getParameter("NombreProyecto")));
+
+        sqlProyectoDAO s = new sqlProyectoDAO();
+        Proyecto proyecto1 = s.consultarProyecto(request.getParameter("NombreProyecto"));
+
+        sqlTareaDAO tarea = new sqlTareaDAO();
+        tarea.insertar(new Tarea(proyecto1.getCveProyecto(), "Tarea de guía", "05/02/2021", 100));
     }
 
     //  Eliminar Proyectos

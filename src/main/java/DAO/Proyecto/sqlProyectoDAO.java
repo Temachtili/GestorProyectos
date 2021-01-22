@@ -164,7 +164,7 @@ public class sqlProyectoDAO implements ProyectoDAO {
             rs = ps.executeQuery();
 
             while (rs.next()){
-                proyecto = new Proyecto(rs.getInt("cveProyecto"), rs.getString("nombre_tarea"));
+                proyecto = new Proyecto(rs.getInt("cveProyecto"), rs.getString("nombre_proyecto"));
             }
 
         }catch (Exception exception){
