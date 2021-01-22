@@ -1,9 +1,4 @@
-<%@ page import="DAO.Proyecto.ProyectoDAO" %>
-<%@ page import="DAO.Proyecto.sqlProyectoDAO" %>
-<%@ page import="Modelo.Proyecto" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <!doctype html>
 <html lang="es">
 
@@ -28,31 +23,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <title>Gantt</title>
-
-    <%
-        sqlProyectoDAO p = new sqlProyectoDAO();
-        ArrayList<Proyecto> lista =  p.traerTodo();
-
-        if(request.getParameter("NombreProyecto") != null){
-            ProyectoDAO sql = new sqlProyectoDAO();
-            sql.insertar(new Proyecto(request.getParameter("NombreProyecto")));
-        }
-
-        if(request.getParameter("Borrar") != null){
-            ProyectoDAO sql = new sqlProyectoDAO();
-            sql.eliminar(new Proyecto(Integer.parseInt(request.getParameter("Borrar"))));
-        }
-
-        if(request.getParameter("Actualizar") != null){
-            ProyectoDAO sql = new sqlProyectoDAO();
-            sql.cambiar(new Proyecto(Integer.parseInt(request.getParameter("cveProyecto")),request.getParameter("Actualizar")));
-        }
-
-        /*  Creacion del array para autocompletar el input.text */
-        ArrayList<String> name = new ArrayList<>();
-        for (Proyecto proyecto : lista) { name.add(proyecto.getNombreProyecto());  }
-
-    %>
 </head>
 
 <body>

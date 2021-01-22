@@ -41,7 +41,7 @@
 
         //  Autocomplete
         sqlTareaDAO s = new sqlTareaDAO();
-        ArrayList<Tarea> arr =  s.listar(2);
+        ArrayList<Tarea> arr =  s.listar(Integer.parseInt(request.getParameter("cveProyecto")));
 
         ArrayList<String> name = new ArrayList<>();
 
@@ -68,10 +68,6 @@
                         $('#PorcentajeBar').attr('style',"width: " + tarea['porcentaje']+"%");
                         $('#PorcentajeBar').attr('class',"progress-bar progress-bar-striped progress-bar-animated " + color(tarea['porcentaje']));
                         $('#Fecha').text(tarea['fechaEntrega']);
-
-                        document.getElementById("nombreTarea").value = tarea["nombreTarea"];
-                        document.getElementById("fechaEntrega").value =  tarea["fechaEntrega"];
-                        document.getElementById("progreso").value =  tarea["porcentaje"];
                     });
                 }
             });
@@ -186,7 +182,7 @@
                             "Porcentaje": $('#PorcentajeBarForm').val(),
                             "Fecha": $('#FechaForm').val()
                         };
-                        $.post( "consultas/CRUD_Tarea.jsp",parametro).done(function(response) {
+                        $.post( "consultas/cConsultaTarea.jsp",parametro).done(function() {
                             location.reload();
 
                         });
@@ -309,7 +305,7 @@
         </div>
     </div>
     <div class="input-group mb-3 ui-widget">
-        <input type="text" class="form-control" id="Buscar" placeholder="Buscar Actividad / Fecha / Nombre">
+        <input type="text" class="form-control" id="Buscar" placeholder="Buscar Tarea por Nombre">
         <button class="btn btn-outline-secondary" type="button" id="btnBuscar"><i class="fa fa-search"
                                                                                   aria-hidden="true"></i></button>
     </div>

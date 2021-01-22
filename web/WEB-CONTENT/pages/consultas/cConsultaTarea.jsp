@@ -9,16 +9,10 @@
   Time: 12:00 p. m.
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="application/json" language="java" %>
+<%@ page contentType="application/json" %>
 <%
     if(request.getParameter("Nombre") != null){
         TareaDAO nuevaTarea = new sqlTareaDAO();
         nuevaTarea.insertar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("Porcentaje"))));
-
-        sqlTareaDAO sql = new sqlTareaDAO();
-        Tarea tarea = sql.consultarTarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("Porcentaje")));
-
-        PrintWriter outt = response.getWriter();
-        outt.println(new Gson().toJson(tarea));
     }
 %>

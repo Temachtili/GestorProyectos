@@ -56,7 +56,7 @@ function borrar(x){
             );
 
             var parametro = {"Borrar" : cve};
-            $.post( "Proyectos.jsp",parametro).done(function() {
+            $.post( "consultas/cConsultaProyecto.jsp",parametro).done(function() {
                 $("[cve='" + cve + "']").remove();
             });
 
@@ -77,7 +77,7 @@ function editar(x){
     }).then((result) => {
         if (result.value) {
             var parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
-            $.post( "Proyectos.jsp",parametro).done(function() {
+            $.post( "consultas/cConsultaProyecto.jsp",parametro).done(function() {
                 $("p[name='"+name+"']").text(result.value);
             });
         }
@@ -104,7 +104,7 @@ $(document).ready(function() {
         }).then((result) => {
             if (result.value) {
                 var parametro = {"NombreProyecto" : result.value};
-                $.post( "Proyectos.jsp",parametro).done(function() {
+                $.post( "consultas/cConsultaProyecto.jsp",parametro).done(function() {
                     buscarProyectos("");
                 });
             }
