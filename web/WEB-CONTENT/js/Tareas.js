@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 // Funciones equis
 function consultar() {
-    const cve = $('[setcve]').attr('setcve');
+    const cve = urlParams.get('cveProyecto');
     $.ajax({
         url: 'consultas/cJsonTareas.jsp?cveProyecto=' + cve,
         type: 'GET',
@@ -159,9 +159,10 @@ function mes(fecha, str) {
 
 let lista;
 let nombres;
+const urlParams = new URLSearchParams(window.location.search);
 
 function agregar() {
-    const cve = $('[setcve]').attr('setcve');
+    const cve = urlParams.get('cveProyecto');
     Swal.fire({
         title: "Crear nueva tarea",
         html: '' +
@@ -215,7 +216,7 @@ function agregar() {
 }
 
 function borrar(x) {
-    const cve = $('[setcve]').attr('setcve');
+    const cve = urlParams.get('cveProyecto');
     Swal.fire({
         title: 'Estas seguro?',
         text: "No podrás revertir los cambios!",
@@ -251,7 +252,7 @@ function borrar(x) {
 }
 
 function editar(x) {
-    const cve = $('[setcve]').attr('setcve');
+    const cve = urlParams.get('cveProyecto');
     Swal.fire({
         title: "Editar tarea",
         html: '' +
@@ -320,8 +321,8 @@ function actualizarTarea(element) {
 }
 
 $(function () {
-    const cve = $('[setcve]').attr('setcve');
-
+    const cve = urlParams.get('cveProyecto');
+    $('#TituloH1').text(urlParams.get('nombreProyecto'));
     $.ajax({
         url: 'consultas/cJsonTareasNombres.jsp?cveProyecto=' + cve,
         type: 'GET',

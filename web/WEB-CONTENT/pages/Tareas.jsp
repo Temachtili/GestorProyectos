@@ -30,7 +30,7 @@
     <title>Gantt</title>
 </head>
 
-<body setcve="<%=request.getParameter("cveProyecto")%>">
+<body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
     <div class="container-fluid container">
         <a class="navbar-brand" href="Proyectos.jsp">Organizador de tareas</a>
@@ -51,7 +51,7 @@
 <div class="container mb-5">
     <div class="row">
         <div class="col-10">
-            <h1 class="display-4"><%=request.getParameter("nombreProyecto")%>
+            <h1 class="display-4" id="TituloH1">
             </h1>
         </div>
         <div class="col-2 d-flex align-items-center">
