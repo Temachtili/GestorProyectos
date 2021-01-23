@@ -258,7 +258,6 @@ function actualizarTarea(element) {
     $('#PorcentajeBar').attr('style', "width: " + lista[numeroTarea]['porcentaje'] + "%");
     $('#PorcentajeBar').attr('class', "progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
     $('button').attr('predecesor', pre);
-    $('button').attr('predecesor', pre);
     $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
 }
 
