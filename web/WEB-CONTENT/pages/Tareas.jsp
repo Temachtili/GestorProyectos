@@ -1,7 +1,3 @@
-<%@ page import="DAO.Tarea.sqlTareaDAO" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="Modelo.Tarea" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
 <html lang="es">
