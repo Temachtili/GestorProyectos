@@ -25,4 +25,6 @@
         TareaDAO nuevaTarea = new sqlTareaDAO();
         nuevaTarea.cambiar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("predecesor")),Integer.parseInt(request.getParameter("Porcentaje"))));
     }
+
+
 %>

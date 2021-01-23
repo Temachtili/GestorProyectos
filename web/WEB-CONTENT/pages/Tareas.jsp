@@ -84,7 +84,7 @@
                     <div class="col-11">
                         <div class="progress">
                             <div id="PorcentajeBar" class="progress-bar progress-bar-striped progress-bar-animated"
-                                 role="progressbar" style="width: 1000%"></div>
+                                 role="progressbar" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>

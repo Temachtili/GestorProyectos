@@ -1,5 +1,35 @@
 //----------------------------------------------------------------------------------------------------------------------
 // Funciones equis
+function consultar() {
+    const cve = $('[setcve]').attr('setcve');
+    $.ajax({
+        url: 'consultas/cJsonTareas.jsp?cveProyecto=' + cve,
+        type: 'GET',
+        async: false
+    })
+        .done(function (response) {
+            lista = JSON.parse(response);
+
+            reiniciarMeses();
+
+            for (let i = 0; i < lista.length; i++) {
+                mes(lista[i]['fechaEntrega'].split("-")[1],
+                    '<li class="list-group-item" role="button" onclick="actualizarTarea(this)" noTarea="' + i + '" predecesor = "' + lista[i]["predecesor"] + '">' +
+                    '<div class="row mb-3">' +
+                    '<div class="col-sm-4">' + lista[i]['nombreTarea'] + '</div>' +
+                    '<div class="col-sm-8">' +
+                    '<div class="progress">' +
+                    '<div class="progress-bar progress-bar-striped progress-bar-animated ' + color(lista[i]['porcentaje']) + '" role="progressbar" style="width: ' + lista[i]['porcentaje'] + '%"></div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>');
+            }
+
+            actualizarTarea($('[noTarea=0]'));
+        });
+}
+
 function color(porcentaje) {
     let color;
     if (porcentaje >= 74) {
@@ -33,6 +63,30 @@ function reiniciarMeses() {
     m10 = "";
     m11 = "";
     m12 = "";
+    $('#Enero').html(m1);
+    $("[name='Enero']").css("cssText", "display:none !important");
+    $('#Febrero').html(m1);
+    $("[name='Febrero']").css("cssText", "display:none !important");
+    $('#Marzo').html(m1);
+    $("[name='Marzo']").css("cssText", "display:none !important");
+    $('#Abril').html(m1);
+    $("[name='Abril']").css("cssText", "display:none !important");
+    $('#Mayo').html(m1);
+    $("[name='Mayo']").css("cssText", "display:none !important");
+    $('#Junio').html(m1);
+    $("[name='Junio']").css("cssText", "display:none !important");
+    $('#Julio').html(m1);
+    $("[name='Julio']").css("cssText", "display:none !important");
+    $('#Agosto').html(m1);
+    $("[name='Agosto']").css("cssText", "display:none !important");
+    $('#Septiembre').html(m1);
+    $("[name='Septiembre']").css("cssText", "display:none !important");
+    $('#Octubre').html(m1);
+    $("[name='Octubre']").css("cssText", "display:none !important");
+    $('#Noviembre').html(m1);
+    $("[name='Noviembre']").css("cssText", "display:none !important");
+    $('#Diciembre').html(m1);
+    $("[name='Diciembre']").css("cssText", "display:none !important");
 }
 
 function mes(fecha, str) {
@@ -154,7 +208,7 @@ function agregar() {
                 "Fecha": $('#FechaForm').val()
             };
             $.post("consultas/cConsultaTarea.jsp", parametro).done(function () {
-                location.reload();
+                consultar();
             });
         }
     });
@@ -183,10 +237,14 @@ function borrar(x) {
                 "predecesor": $(x).attr('predecesor'),
                 "Borrar": true
             };
-            $.post("consultas/cConsultaTarea.jsp", parametro).done(function () {
+            $.ajax({
+                url: 'consultas/cConsultaTarea.jsp',
+                data: parametro,
+                type: 'GET',
+                async: false
+            }).done(function (response) {
                 consultar();
             });
-
 
         }
     });
@@ -259,37 +317,6 @@ function actualizarTarea(element) {
     $('#PorcentajeBar').attr('class', "progress-bar progress-bar-striped progress-bar-animated " + color(lista[numeroTarea]['porcentaje']));
     $('button').attr('predecesor', pre);
     $('#Fecha').text(lista[numeroTarea]['fechaEntrega']);
-}
-
-function consultar() {
-    const cve = $('[setcve]').attr('setcve');
-    $.ajax({
-        url: 'consultas/cJsonTareas.jsp?cveProyecto=' + cve,
-        type: 'GET',
-        async: false
-    })
-        .done(function (response) {
-            lista = JSON.parse(response);
-
-            reiniciarMeses();
-
-            for (let i = 0; i < lista.length; i++) {
-                mes(lista[i]['fechaEntrega'].split("-")[1],
-                    '<li class="list-group-item" role="button" onclick="actualizarTarea(this)" noTarea="' + i + '" predecesor = "' + lista[i]["predecesor"] + '">' +
-                    '<div class="row mb-3">' +
-                    '<div class="col-sm-4">' + lista[i]['nombreTarea'] + '</div>' +
-                    '<div class="col-sm-8">' +
-                    '<div class="progress">' +
-                    '<div class="progress-bar progress-bar-striped progress-bar-animated ' + color(lista[i]['porcentaje']) + '" role="progressbar" style="width: ' + lista[i]['porcentaje'] + '%"></div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</li>');
-            }
-
-            actualizarTarea($('[noTarea=0]'));
-
-        });
 }
 
 $(function () {
