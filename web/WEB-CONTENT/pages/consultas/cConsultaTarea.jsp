@@ -1,6 +1,8 @@
 <%@ page import="DAO.Tarea.TareaDAO" %>
 <%@ page import="DAO.Tarea.sqlTareaDAO" %>
-<%@ page import="Modelo.Tarea" %><%--
+<%@ page import="Modelo.Tarea" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.io.PrintWriter" %><%--
   Created by IntelliJ IDEA.
   User: yayis
   Date: 21/01/2021
@@ -21,6 +23,6 @@
 
     if(request.getParameter("Editar") != null){
         TareaDAO nuevaTarea = new sqlTareaDAO();
-        nuevaTarea.cambiar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre2"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("predecesor")),Integer.parseInt(request.getParameter("Porcentaje"))));
+        nuevaTarea.cambiar(new Tarea(Integer.parseInt(request.getParameter("cve")),request.getParameter("Nombre"),request.getParameter("Fecha"),Integer.parseInt(request.getParameter("predecesor")),Integer.parseInt(request.getParameter("Porcentaje"))));
     }
 %>

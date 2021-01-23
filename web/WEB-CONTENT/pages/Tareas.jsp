@@ -2,7 +2,7 @@
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="Modelo.Tarea" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
 <html lang="es">
 
@@ -55,10 +55,11 @@
 <div class="container mb-5">
     <div class="row">
         <div class="col-10">
-            <h1 class="display-4"><%=request.getParameter("nombreProyecto")%></h1>
+            <h1 class="display-4"><%=request.getParameter("nombreProyecto")%>
+            </h1>
         </div>
         <div class="col-2 d-flex align-items-center">
-            <button type="button" onclick="agregar()" class="btn btn-success me-3" agregar>
+            <button type="button" onclick="agregar()" class="btn btn-success me-3">
                 Nueva tarea
             </button>
         </div>
@@ -70,7 +71,33 @@
     </div>
 
     <div class="card" id="TareaActual">
-
+        <div class="card-header">
+            <p id="Titulo">Tarea de ejemplo</p>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <div class="row mb-3">
+                    <div class="col-1">
+                        <p id="PorcentajeNum" name="">Porcentaje: </p>
+                    </div>
+                    <div class="col-11">
+                        <div class="progress">
+                            <div id="PorcentajeBar" class="progress-bar progress-bar-striped progress-bar-animated"
+                                 role="progressbar" style="width: 1000%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Fecha:</label>
+                <p id="Fecha">05/01/2021 (Ejemplo)</p>
+            </div>
+            <div class="mb-3 d-flex justify-content-center">
+                <button type="button" class="btn btn-primary me-3" onclick="editar(this)" predecesor="">Editar</button>
+                <button type="button" class="btn btn-danger" onclick="borrar(this)" predecesor="">Eliminar</button>
+            </div>
+        </div>
     </div>
 
     <br>
@@ -81,7 +108,7 @@
                 <div class="card-header">
                     Enero
                 </div>
-                <ul class="list-group list-group-flush" id="Enero">
+                <ul class="list-group list-group-flush" id="Enero" noTarea="0">
 
                 </ul>
             </div>

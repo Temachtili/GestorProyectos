@@ -23,9 +23,6 @@
 
         sqlProyectoDAO s = new sqlProyectoDAO();
         Proyecto proyecto1 = s.consultarProyecto(request.getParameter("NombreProyecto"));
-
-        sqlTareaDAO tarea = new sqlTareaDAO();
-        tarea.insertar(new Tarea(proyecto1.getCveProyecto(), "Tarea de guía", "05/02/2021", 100));
     }
 
     //  Eliminar Proyectos
