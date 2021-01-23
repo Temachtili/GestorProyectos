@@ -4,7 +4,7 @@ $(buscarProyectos(""));
 
 function buscarProyectos(proyectos){
 
-    var params = {
+    let params = {
         "proyectos": proyectos
     }
 
@@ -16,7 +16,6 @@ function buscarProyectos(proyectos){
     })
         .done(function (response){
             $("#lista-proyectos").html(response);
-
         })
         .fail(function (){
             console.log("error")
@@ -25,8 +24,8 @@ function buscarProyectos(proyectos){
 }
 
 $(document).on('keyup', '#Buscar', function (){
-    var valor = $(this).val();
-    if (valor != ""){
+    let valor = $(this).val();
+    if (valor !== ""){
         buscarProyectos(valor);
     }else{
         buscarProyectos("");
@@ -36,8 +35,7 @@ $(document).on('keyup', '#Buscar', function (){
 //---------------------------------------------------------------------------------------------------------------------
 // FUNCIONES DE BOTONES
 function borrar(x){
-    var cve = $(x).attr('cve');
-    console.log(cve);
+    let cve = $(x).attr('cve')
     Swal.fire({
         title: 'Estas seguro?',
         text: "No podrás revertir los cambios!",
@@ -54,19 +52,17 @@ function borrar(x){
                 'success'
             );
 
-            var parametro = {"Borrar" : cve};
+            let parametro = {"Borrar" : cve};
             $.post( "consultas/cConsultaProyecto.jsp",parametro).done(function() {
                 $("[cve='" + cve + "']").remove();
             });
-
-
         }
     });
 }
 
 function editar(x){
-    var name = $(x).attr('name');
-    var cve = $(x).attr('cve');
+    let name = $(x).attr('name');
+    let cve = $(x).attr('cve');
     Swal.fire({
         title: "Editar nombre",
         input: 'text',
@@ -75,7 +71,7 @@ function editar(x){
         showCancelButton: true
     }).then((result) => {
         if (result.value) {
-            var parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
+            let parametro = {"Actualizar" : result.value, "cveProyecto" : cve};
             $.post( "consultas/cConsultaProyecto.jsp",parametro).done(function() {
                 $("p[name='"+name+"']").text(result.value);
             });
@@ -84,14 +80,13 @@ function editar(x){
 }
 
 function tarea(x){
-    var id = $(x).attr('id');
-    var nombre = $(x).attr('name');
+    let id = $(x).attr('id');
+    let nombre = $(x).attr('name');
     $(location).attr('href','Tareas.jsp?cveProyecto='+id+'&nombreProyecto='+ nombre);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 //AGREGAR PROYECTO
-
 
 $(document).ready(function() {
     $('#btn_nuevo').click(function () {
@@ -102,7 +97,7 @@ $(document).ready(function() {
             showCancelButton: true
         }).then((result) => {
             if (result.value) {
-                var parametro = {"NombreProyecto" : result.value};
+                let parametro = {"NombreProyecto" : result.value};
                 $.post("consultas/cConsultaProyecto.jsp",parametro).done(function() {
                     buscarProyectos("");
                 });

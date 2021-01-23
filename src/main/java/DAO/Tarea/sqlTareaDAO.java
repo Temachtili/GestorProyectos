@@ -49,7 +49,6 @@ public class sqlTareaDAO implements TareaDAO {
                 ps.setInt(4, ob.getPorcentaje());
                 ps.executeUpdate(); // Se ejecuta el query
 
-                System.out.println("Se registró correctamente la tarea");
                 cveProyecto = 1;
 
             }catch (Exception e){
@@ -77,7 +76,6 @@ public class sqlTareaDAO implements TareaDAO {
                 ps.setInt(2, ob.getPredecesor());
 
                 ps.executeUpdate(); //Se ejecuta el Query
-                System.out.println("Se eliminó el(los) registro(s)");
                 cveProyecto = 1;
 
             }catch (Exception e){
@@ -144,7 +142,6 @@ public class sqlTareaDAO implements TareaDAO {
                 incorporarDatos(ob, CAMBIAR);
                 ps.executeUpdate(); // Se ejecuta el query
 
-                System.out.println("Se actualizó correctamente el registro");
                 cveProyecto = ob.getCveProyecto();
             }
         }catch (Exception e){
